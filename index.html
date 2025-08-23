@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VizinApp</title>
+    <!-- Inclui o Tailwind CSS para estilização rápida -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="flex flex-col h-screen">
+    <!-- Header (Topo da Página) -->
+    <header
+      class="bg-gray-800 shadow-lg p-4 flex justify-between items-center sticky top-0 z-10"
+    >
+      <h1 class="text-xl font-bold text-gray-200">VizinApp</h1>
+      <div class="flex items-center space-x-4">
+        <!-- Botão de Notificações -->
+        <button class="text-gray-400 hover:text-gray-200">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 5.165 6 7.214 6 9.5V11a6 6 0 0012 0v-1.842A2.032 2.032 0 0120 17h-.001zM12 20a2 2 0 100-4 2 2 0 000 4z"
+            />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Conteúdo Principal das Abas -->
+    <main class="flex-grow overflow-y-auto pb-20">
+      <!-- Aba 1: Home (Feed) -->
+      <div id="home" class="tab-content p-4 active">
+        <h2 class="text-2xl font-semibold mb-4 text-gray-100">
+          Feed do Condomínio
+        </h2>
+
+        <!-- Bloco de Comunicado Oficial -->
+        <div
+          class="bg-gray-800 rounded-lg shadow-sm p-4 mb-4 border-l-4 border-indigo-500"
+        >
+          <div class="flex justify-between items-center mb-2">
+            <span
+              class="bg-indigo-500 text-white text-xs font-bold px-2 py-1 rounded-full"
+              >Comunicado Oficial</span
+            >
+            <span class="text-xs text-gray-400">Hoje, 17:20</span>
+          </div>
+          <h3 class="text-lg font-bold text-gray-200 mb-1">
+            Manutenção programada nos elevadores
+          </h3>
+          <p class="text-sm text-gray-300">
+            Quarta-feira (28) das 10h às 12h. Pedimos que programem suas saídas.
+          </p>
+        </div>
+
+        <!-- Modelo de Publicação de Morador com imagem -->
+        <div
+          class="post bg-gray-800 rounded-lg shadow-sm p-4 mb-4"
+          data-post-id="1"
+        >
+          <div class="flex items-center mb-2">
+            <img
+              src="https://placehold.co/40x40/93c5fd/ffffff?text=C"
+              alt="Foto de Perfil do Usuário"
+              class="rounded-full mr-3 border-2 border-blue-400"
+            />
+            <div>
+              <p class="font-bold text-gray-200">
+                Carlos
+                <span class="text-sm text-gray-400 font-normal"
+                  >・ 3h atrás</span
+                >
+              </p>
+              <p class="text-xs text-gray-400">Apto 502</p>
+            </div>
+          </div>
+          <p class="text-gray-300 mb-3">
+            Academia renovada! Os novos equipamentos já estão disponíveis para
+            uso.
+          </p>
+          <img
+            src="https://placehold.co/600x400/38bdf8/ffffff?text=Academia+Nova"
+            alt="Imagem da Publicação"
+            class="w-full rounded-md mb-3"
+          />
+          <div class="flex items-center space-x-4 text-gray-400">
+            <button
+              class="like-btn flex items-center space-x-1 hover:text-indigo-400"
+              data-liked="false"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+              <span class="likes-count">25</span>
+            </button>
+            <button class="flex items-center space-x-1 hover:text-indigo-400">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>5</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Modelo de Publicação de Morador sem imagem -->
+        <div
+          class="post bg-gray-800 rounded-lg shadow-sm p-4 mb-4"
+          data-post-id="2"
+        >
+          <div class="flex items-center mb-2">
+            <img
+              src="https://placehold.co/40x40/8b5cf6/ffffff?text=J"
+              alt="Foto de Perfil do Usuário"
+              class="rounded-full mr-3 border-2 border-purple-400"
+            />
+            <div>
+              <p class="font-bold text-gray-200">
+                João Silva
+                <span class="text-sm text-gray-400 font-normal"
+                  >・ 1 dia atrás</span
+                >
+              </p>
+              <p class="text-xs text-gray-400">Apto 101</p>
+            </div>
+          </div>
+          <p class="text-gray-300 mb-3">
+            Quem pode me emprestar uma furadeira para amanhã à tarde? Devolvo
+            logo em seguida! 🛠️
+          </p>
+          <div class="flex items-center space-x-4 text-gray-400">
+            <button
+              class="like-btn flex items-center space-x-1 hover:text-indigo-400"
+              data-liked="false"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+              <span class="likes-count">12</span>
+            </button>
+            <button class="flex items-center space-x-1 hover:text-indigo-400">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>3</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mais um post de morador com imagem -->
+        <div
+          class="post bg-gray-800 rounded-lg shadow-sm p-4 mb-4"
+          data-post-id="3"
+        >
+          <div class="flex items-center mb-2">
+            <img
+              src="https://placehold.co/40x40/d1d5db/ffffff?text=L"
+              alt="Foto de Perfil do Usuário"
+              class="rounded-full mr-3 border-2 border-gray-400"
+            />
+            <div>
+              <p class="font-bold text-gray-200">
+                Larissa
+                <span class="text-sm text-gray-400 font-normal"
+                  >・ 2 dias atrás</span
+                >
+              </p>
+              <p class="text-xs text-gray-400">Apto 603</p>
+            </div>
+          </div>
+          <p class="text-gray-300 mb-3">
+            Adorei o novo jardim do prédio! Quem plantou as flores? Ficou lindo!
+            🌷
+          </p>
+          <img
+            src="https://placehold.co/600x400/9ca3af/ffffff?text=Jardim+do+Condom%C3%ADnio"
+            alt="Imagem da Publicação"
+            class="w-full rounded-md mb-3"
+          />
+          <div class="flex items-center space-x-4 text-gray-400">
+            <button
+              class="like-btn flex items-center space-x-1 hover:text-indigo-400"
+              data-liked="false"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+              <span class="likes-count">30</span>
+            </button>
+            <button class="flex items-center space-x-1 hover:text-indigo-400">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>8</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Post de serviço -->
+        <div
+          class="post bg-gray-800 rounded-lg shadow-sm p-4 mb-4"
+          data-post-id="4"
+        >
+          <div class="flex items-center mb-2">
+            <img
+              src="https://placehold.co/40x40/d6d3d1/ffffff?text=E"
+              alt="Foto de Perfil do Usuário"
+              class="rounded-full mr-3 border-2 border-stone-400"
+            />
+            <div>
+              <p class="font-bold text-gray-200">
+                Equipe de Limpeza
+                <span class="text-sm text-gray-400 font-normal"
+                  >・ 3 dias atrás</span
+                >
+              </p>
+              <p class="text-xs text-gray-400">Serviço</p>
+            </div>
+          </div>
+          <p class="text-gray-300 mb-3">
+            Oferecemos serviço de limpeza de apartamentos. Interessados podem
+            entrar em contato por mensagem privada.
+          </p>
+          <div class="flex items-center space-x-4 text-gray-400">
+            <button
+              class="like-btn flex items-center space-x-1 hover:text-indigo-400"
+              data-liked="false"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+              <span class="likes-count">8</span>
+            </button>
+            <button class="flex items-center space-x-1 hover:text-indigo-400">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>1</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aba 2: Explorar (Busca/Marketplace) -->
+      <div id="explore" class="tab-content p-4">
+        <h2 class="text-2xl font-semibold mb-4 text-gray-100">
+          Explorar e Serviços
+        </h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          <div class="bg-gray-800 rounded-lg shadow-sm p-4 text-center">
+            <p class="text-indigo-400 text-3xl mb-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-8 w-8 mx-auto"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </p>
+            <p class="font-bold text-gray-300">Moradores</p>
+          </div>
+          <div class="bg-gray-800 rounded-lg shadow-sm p-4 text-center">
+            <p class="text-indigo-400 text-3xl mb-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-8 w-8 mx-auto"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 6.5V17.5M12 6.5a4 4 0 00-4 4v7h8v-7a4 4 0 00-4-4z"
+                />
+              </svg>
+            </p>
+            <p class="font-bold text-gray-300">Serviços</p>
+          </div>
+          <div class="bg-gray-800 rounded-lg shadow-sm p-4 text-center">
+            <p class="text-indigo-400 text-3xl mb-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-8 w-8 mx-auto"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 6l3 1v16h12V7l3-1M6 6v-2a2 2 0 012-2h8a2 2 0 012 2v2M8 7V5h8v2M12 11v6m-3-3h6"
+                />
+              </svg>
+            </p>
+            <p class="font-bold text-gray-300">Marketplace</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aba 3: Reservas/Agenda -->
+      <div id="reservations" class="tab-content p-4">
+        <h2 class="text-2xl font-semibold mb-4 text-gray-100">
+          Reservas e Eventos
+        </h2>
+        <div class="bg-gray-800 rounded-lg shadow-sm p-4">
+          <h3 class="font-bold text-lg mb-4 text-gray-200">Áreas Comuns</h3>
+          <ul id="reservations-list" class="space-y-4 text-gray-300">
+            <li class="p-2 rounded-md bg-gray-700">
+              <div class="flex items-center justify-between mb-2">
+                <span>Salão de Festas</span>
+                <button
+                  class="bg-indigo-600 text-white px-3 py-1 text-sm rounded-md hover:bg-indigo-500"
+                >
+                  Reservar
+                </button>
+              </div>
+              <div class="border-t border-gray-600 pt-2">
+                <p class="text-xs text-gray-400 font-semibold mb-1">
+                  Datas Reservadas:
+                </p>
+                <span class="text-sm text-red-400">10/11, 15/11, 22/11</span>
+              </div>
+            </li>
+            <li class="p-2 rounded-md bg-gray-700">
+              <div class="flex items-center justify-between mb-2">
+                <span>Churrasqueira</span>
+                <button
+                  class="bg-indigo-600 text-white px-3 py-1 text-sm rounded-md hover:bg-indigo-500"
+                >
+                  Reservar
+                </button>
+              </div>
+              <div class="border-t border-gray-600 pt-2">
+                <p class="text-xs text-gray-400 font-semibold mb-1">
+                  Datas Reservadas:
+                </p>
+                <span class="text-sm text-red-400">05/11, 12/11, 13/11</span>
+              </div>
+            </li>
+            <li class="p-2 rounded-md bg-gray-700">
+              <div class="flex items-center justify-between mb-2">
+                <span>Quadra Poliesportiva</span>
+                <button
+                  class="bg-indigo-600 text-white px-3 py-1 text-sm rounded-md hover:bg-indigo-500"
+                >
+                  Reservar
+                </button>
+              </div>
+              <div class="border-t border-gray-600 pt-2">
+                <p class="text-xs text-gray-400 font-semibold mb-1">
+                  Datas Reservadas:
+                </p>
+                <span class="text-sm text-red-400">18/11, 19/11, 25/11</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Aba 4: Mensagens (Lista de Chats) -->
+      <div id="messages" class="tab-content p-4">
+        <h2 class="text-2xl font-semibold mb-4 text-gray-100">Mensagens</h2>
+        <div class="space-y-2">
+          <!-- Chat de Exemplo: Administração -->
+          <div
+            class="chat-item flex items-center p-3 rounded-lg bg-gray-800 shadow-sm hover:bg-gray-700 cursor-pointer"
+            data-chat-id="admin"
+          >
+            <img
+              src="https://placehold.co/50x50/6366f1/ffffff?text=A"
+              alt="Foto de Perfil"
+              class="rounded-full mr-4 border-2 border-indigo-400"
+            />
+            <div>
+              <p class="font-bold text-gray-200">Administração</p>
+              <p class="text-sm text-gray-400 truncate">
+                Amanhã teremos manutenção no elevador...
+              </p>
+            </div>
+          </div>
+          <!-- Chat de Exemplo: Vania (Apto 205) -->
+          <div
+            class="chat-item flex items-center p-3 rounded-lg bg-gray-800 shadow-sm hover:bg-gray-700 cursor-pointer"
+            data-chat-id="vania"
+          >
+            <img
+              src="https://placehold.co/50x50/93c5fd/ffffff?text=V"
+              alt="Foto de Perfil"
+              class="rounded-full mr-4 border-2 border-blue-400"
+            />
+            <div>
+              <p class="font-bold text-gray-200">Vania (Apto 205)</p>
+              <p class="text-sm text-gray-400 truncate">
+                Obrigado por me ajudar a carregar as compras!
+              </p>
+            </div>
+          </div>
+          <!-- Chat de Exemplo: Grupo -->
+          <div
+            class="chat-item flex items-center p-3 rounded-lg bg-gray-800 shadow-sm hover:bg-gray-700 cursor-pointer"
+            data-chat-id="grupo_a"
+          >
+            <img
+              src="https://placehold.co/50x50/34d399/ffffff?text=G"
+              alt="Ícone de Grupo"
+              class="rounded-full mr-4 border-2 border-emerald-400"
+            />
+            <div>
+              <p class="font-bold text-gray-200">Grupo do Bloco A</p>
+              <p class="text-sm text-gray-400 truncate">
+                Alguém viu a chave do salão de festas?
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aba 5: Perfil -->
+      <div id="profile" class="tab-content p-4">
+        <h2 class="text-2xl font-semibold mb-4 text-gray-100">Perfil</h2>
+        <div
+          class="bg-gray-800 rounded-lg shadow-sm p-6 mb-4 flex flex-col items-center"
+        >
+          <img
+            src="https://placehold.co/100x100/6366f1/ffffff?text=U"
+            alt="Foto de Perfil do Usuário"
+            class="rounded-full mb-4 border-4 border-indigo-400"
+          />
+          <h3 class="text-xl font-bold text-gray-200">Maria Silva</h3>
+          <p class="text-gray-400">Apto 302</p>
+        </div>
+        <div class="bg-gray-800 rounded-lg shadow-sm p-4">
+          <h3 class="font-bold text-lg mb-2 text-gray-200">Informações</h3>
+          <ul class="space-y-2 text-gray-300">
+            <li><span class="font-semibold">Veículo:</span> Honda Civic</li>
+            <li>
+              <span class="font-semibold">Histórico de Reservas:</span>
+              Churrasqueira (15/08)
+            </li>
+            <li><span class="font-semibold">Minhas Publicações:</span> 2</li>
+          </ul>
+        </div>
+      </div>
+    </main>
+
+    <!-- Botão de Adicionar Publicação (Flutuante) -->
+    <button
+      id="add-post-btn"
+      class="bg-indigo-600 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-indigo-500 transition-colors duration-300"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-8 w-8"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+        />
+      </svg>
+    </button>
+
+    <!-- Barra de Navegação Inferior (Abas) -->
+    <nav
+      class="bg-gray-800 shadow-lg p-4 flex justify-around items-center sticky bottom-0 z-10"
+    >
+      <button
+        id="home-tab"
+        class="btn-tab flex flex-col items-center text-gray-600 hover:text-indigo-400 active"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path d="M12 6.94l-5.636 5.636L12 18.212l5.636-5.636L12 6.94z" />
+          <path
+            d="M12 2L.892 12.108 12 23.216 23.108 12.108 12 2zM12 4.414l9.108 9.108-9.108 9.108-9.108-9.108L12 4.414z"
+          />
+        </svg>
+        <span class="text-xs text-gray-400">Home</span>
+      </button>
+      <button
+        id="explore-tab"
+        class="btn-tab flex flex-col items-center text-gray-600 hover:text-indigo-400"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
+        </svg>
+        <span class="text-xs text-gray-400">Explorar</span>
+      </button>
+      <button
+        id="reservations-tab"
+        class="btn-tab flex flex-col items-center text-gray-600 hover:text-indigo-400"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M8 7V3h8v4m-4 0v14m-5-9H3m18 0h-3m-6 3H9m12 0h-3"
+          />
+        </svg>
+        <span class="text-xs text-gray-400">Reservas</span>
+      </button>
+      <button
+        id="messages-tab"
+        class="btn-tab flex flex-col items-center text-gray-600 hover:text-indigo-400"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M8 10h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+        <span class="text-xs text-gray-400">Mensagens</span>
+      </button>
+      <button
+        id="profile-tab"
+        class="btn-tab flex flex-col items-center text-gray-600 hover:text-indigo-400"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 4a4 4 0 100 8 4 4 0 000-8zM12 14c-4.418 0-8 3.582-8 8h16c0-4.418-3.582-8-8-8z"
+          />
+        </svg>
+        <span class="text-xs text-gray-400">Perfil</span>
+      </button>
+    </nav>
+
+    <!-- Janela de Chat (Inicialmente oculta) -->
+    <div id="chat-window">
+      <!-- Chat Header -->
+      <div
+        class="bg-gray-800 shadow-lg p-4 flex items-center sticky top-0 z-10"
+      >
+        <button
+          id="back-to-messages"
+          class="text-gray-400 hover:text-gray-200 mr-4"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
+        <h2 id="chat-name" class="text-xl font-bold text-gray-200"></h2>
+      </div>
+
+      <!-- Chat Body (Área de Mensagens) -->
+      <div id="chat-body" class="flex-grow overflow-y-auto p-4 space-y-4">
+        <!-- As mensagens serão inseridas aqui via JavaScript -->
+      </div>
+
+      <!-- Chat Input -->
+      <div
+        class="bg-gray-800 shadow-lg p-4 flex items-center space-x-2 sticky bottom-0"
+      >
+        <input
+          id="message-input"
+          type="text"
+          placeholder="Escreva uma mensagem..."
+          class="flex-grow px-4 py-2 rounded-full bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        />
+        <button
+          id="send-btn"
+          class="bg-indigo-600 text-white rounded-full p-2 hover:bg-indigo-500 transition-colors duration-300"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 transform rotate-90"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M14 5l7 7m0 0l-7 7m7-7H3"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
