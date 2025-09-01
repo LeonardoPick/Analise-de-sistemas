@@ -1,0 +1,1995 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CondoApp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Importa a fonte 'Inter' do Google Fonts */
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+      /* Estilos globais para o corpo da página */
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #1f2937; /* Cor de fundo escura */
+        color: #f3f4f6; /* Cor do texto clara */
+      }
+
+      /* Esconde as abas de conteúdo por padrão */
+      .tab-content {
+        display: none;
+      }
+
+      /* Mostra a aba de conteúdo ativa */
+      .tab-content.active {
+        display: block;
+      }
+
+      /* Estiliza o botão de aba ativo */
+      .btn-tab.active {
+        color: #6366f1; /* Cor ativa para botões de aba */
+      }
+
+      /* Adiciona uma borda na parte inferior dos posts */
+      .post {
+        border-bottom: 1px solid #374151; /* Borda escura para posts */
+      }
+
+      /* Estilo para o botão flutuante de adicionar */
+      #add-post-btn {
+        position: fixed;
+        bottom: 6rem; /* Acima da barra de navegação */
+        right: 1.5rem;
+        width: 4rem;
+        height: 4rem;
+        z-index: 20;
+        transition: transform 0.2s ease-in-out;
+      }
+
+      /* Efeito de clique no botão flutuante */
+      #add-post-btn:active {
+        transform: scale(0.95);
+      }
+
+      /* Estilo específico para a janela de chat (oculta por padrão) */
+      #chat-window {
+        display: none;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #1f2937;
+        z-index: 30;
+      }
+
+      /* Mostra a janela de chat quando ela está ativa */
+      #chat-window.active {
+        display: flex;
+      }
+
+      /* Estilo para a bolha de mensagem no chat */
+      .message-bubble {
+        max-width: 80%;
+        padding: 0.75rem;
+        border-radius: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      /* Estilo para mensagens enviadas pelo usuário */
+      .sent {
+        background-color: #4f46e5;
+        color: white;
+        align-self: flex-end;
+        border-bottom-right-radius: 0;
+      }
+
+      /* Estilo para mensagens recebidas */
+      .received {
+        background-color: #374151;
+        color: #d1d5db;
+        align-self: flex-start;
+        border-bottom-left-radius: 0;
+      }
+
+      /* Estilos para a tela de login */
+      #login-screen {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #1f2937;
+        z-index: 50;
+      }
+
+      /* Estilos para o menu flutuante do botão de adicionar */
+      #floating-menu {
+        display: none;
+        position: fixed;
+        bottom: 10rem;
+        right: 2rem;
+        background-color: #374151;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 25;
+        flex-direction: column;
+        padding: 0.5rem;
+      }
+
+      /* Estilo para a tela de advertência */
+      #add-warning-screen {
+        display: none;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #1f2937;
+        z-index: 40;
+        justify-content: center;
+        align-items: center;
+        padding: 1rem;
+      }
+
+      /* Estilo para a tela de nova publicação */
+      #add-post-screen {
+        display: none;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #1f2937;
+        z-index: 40;
+        justify-content: center;
+        align-items: center;
+        padding: 1rem;
+      }
+
+      /* Estilo para a seção de comentários */
+      .comments-section {
+        display: none;
+        margin-top: 1rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid #374151;
+      }
+
+      /* Estilo para a tela de criação de aviso (novo) */
+      #add-notice-screen {
+        display: none;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #1f2937;
+        z-index: 40;
+        justify-content: center;
+        align-items: center;
+        padding: 1rem;
+      }
+    </style>
+  </head>
+  <body class="flex flex-col h-screen">
+    <div id="login-screen" class="p-6">
+      <div class="bg-gray-800 p-8 rounded-lg shadow-xl w-80 max-w-full">
+        <h2 class="text-2xl font-bold text-center mb-6 text-gray-200">
+          CondoApp
+        </h2>
+        <form id="login-form" class="space-y-4">
+          <div>
+            <input
+              type="text"
+              id="username"
+              placeholder="Usuário"
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div>
+            <input
+              type="password"
+              id="password"
+              placeholder="Senha"
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <button
+            type="submit"
+            class="w-full bg-indigo-600 text-white font-bold py-2 rounded-lg hover:bg-indigo-500 transition-colors duration-300"
+          >
+            Entrar
+          </button>
+        </form>
+        <p
+          id="login-error"
+          class="text-red-400 text-sm text-center mt-4 hidden"
+        >
+          Usuário ou senha incorretos.
+        </p>
+        <p class="text-xs text-center text-gray-400 mt-4">
+          Usuário Teste: **morador** / **123**<br />
+          Usuário Admin: **admin** / **admin**
+        </p>
+      </div>
+    </div>
+
+    <header
+      class="bg-gray-800 shadow-lg p-4 flex justify-between items-center sticky top-0 z-10 hidden"
+      id="main-header"
+    >
+      <h1 class="text-xl font-bold text-gray-200">CondoApp</h1>
+      <div class="flex items-center space-x-4">
+        <button class="text-gray-400 hover:text-gray-200">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 5.165 6 7.214 6 9.5V11a6 6 0 0012 0v-1.842A2.032 2.032 0 0120 17h-.001zM12 20a2 2 0 100-4 2 2 0 000 4z"
+            />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="flex-grow overflow-y-auto pb-20 hidden" id="main-content">
+      <div id="home" class="tab-content p-4 active">
+        <h2 class="text-2xl font-semibold mb-4 text-gray-100">
+          Feed do Condomínio
+        </h2>
+        <div id="feed-container">
+          <div
+            class="post bg-gray-800 rounded-lg shadow-sm p-4 mb-4"
+            data-post-id="1"
+          >
+            <div class="flex items-center mb-2">
+              <img
+                src="https://placehold.co/40x40/93c5fd/ffffff?text=C"
+                alt="Foto de Perfil do Usuário"
+                class="rounded-full mr-3 border-2 border-blue-400"
+              />
+              <div>
+                <p class="font-bold text-gray-200">
+                  Carlos
+                  <span class="text-sm text-gray-400 font-normal"
+                    >・ 3h atrás</span
+                  >
+                </p>
+                <p class="text-xs text-gray-400">Apto 502</p>
+              </div>
+            </div>
+            <p class="text-gray-300 mb-3">
+              Academia renovada! Os novos equipamentos já estão disponíveis para
+              uso.
+            </p>
+            <img
+              src="https://placehold.co/600x400/38bdf8/ffffff?text=Academia+Nova"
+              alt="Imagem da Publicação"
+              class="w-full rounded-md mb-3"
+            />
+            <div class="flex items-center space-x-4 text-gray-400">
+              <button
+                class="like-btn flex items-center space-x-1 hover:text-indigo-400"
+                data-liked="false"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+                <span class="likes-count">25</span>
+              </button>
+              <button
+                class="comment-btn flex items-center space-x-1 hover:text-indigo-400"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <span class="comment-count">2</span>
+              </button>
+            </div>
+            <div class="comments-section" data-post-id="1">
+              <div class="comments-list mt-2 space-y-2 text-sm text-gray-400">
+                <div class="p-2 rounded-md bg-gray-700">
+                  <p class="font-semibold text-gray-300">João</p>
+                  <p>Ficou ótimo! Parabéns pela iniciativa.</p>
+                </div>
+                <div class="p-2 rounded-md bg-gray-700">
+                  <p class="font-semibold text-gray-300">Ana</p>
+                  <p>Já testei e aprovei! Muito bom.</p>
+                </div>
+              </div>
+              <div class="add-comment-form mt-2 flex items-center space-x-2">
+                <input
+                  type="text"
+                  class="comment-input w-full px-4 py-2 rounded-full bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  placeholder="Escreva um comentário..."
+                />
+                <button
+                  class="send-comment-btn bg-indigo-600 text-white rounded-full p-2 hover:bg-indigo-500 transition-colors duration-300"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 transform rotate-90"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="post bg-gray-800 rounded-lg shadow-sm p-4 mb-4"
+            data-post-id="2"
+          >
+            <div class="flex items-center mb-2">
+              <img
+                src="https://placehold.co/40x40/8b5cf6/ffffff?text=J"
+                alt="Foto de Perfil do Usuário"
+                class="rounded-full mr-3 border-2 border-purple-400"
+              />
+              <div>
+                <p class="font-bold text-gray-200">
+                  João Silva
+                  <span class="text-sm text-gray-400 font-normal"
+                    >・ 1 dia atrás</span
+                  >
+                </p>
+                <p class="text-xs text-gray-400">Apto 101</p>
+              </div>
+            </div>
+            <p class="text-gray-300 mb-3">
+              Quem pode me emprestar uma furadeira para amanhã à tarde? Devolvo
+              logo em seguida! 🛠️
+            </p>
+            <div class="flex items-center space-x-4 text-gray-400">
+              <button
+                class="like-btn flex items-center space-x-1 hover:text-indigo-400"
+                data-liked="false"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+                <span class="likes-count">12</span>
+              </button>
+              <button
+                class="comment-btn flex items-center space-x-1 hover:text-indigo-400"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <span class="comment-count">1</span>
+              </button>
+            </div>
+            <div class="comments-section" data-post-id="2">
+              <div class="comments-list mt-2 space-y-2 text-sm text-gray-400">
+                <div class="p-2 rounded-md bg-gray-700">
+                  <p class="font-semibold text-gray-300">Maria</p>
+                  <p>Posso te emprestar a minha! Me chama no chat.</p>
+                </div>
+              </div>
+              <div class="add-comment-form mt-2 flex items-center space-x-2">
+                <input
+                  type="text"
+                  class="comment-input w-full px-4 py-2 rounded-full bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  placeholder="Escreva um comentário..."
+                />
+                <button
+                  class="send-comment-btn bg-indigo-600 text-white rounded-full p-2 hover:bg-indigo-500 transition-colors duration-300"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 transform rotate-90"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="post bg-gray-800 rounded-lg shadow-sm p-4 mb-4"
+            data-post-id="3"
+          >
+            <div class="flex items-center mb-2">
+              <img
+                src="https://placehold.co/40x40/d1d5db/ffffff?text=L"
+                alt="Foto de Perfil do Usuário"
+                class="rounded-full mr-3 border-2 border-gray-400"
+              />
+              <div>
+                <p class="font-bold text-gray-200">
+                  Larissa
+                  <span class="text-sm text-gray-400 font-normal"
+                    >・ 2 dias atrás</span
+                  >
+                </p>
+                <p class="text-xs text-gray-400">Apto 603</p>
+              </div>
+            </div>
+            <p class="text-gray-300 mb-3">
+              Adorei o novo jardim do prédio! Quem plantou as flores? Ficou
+              lindo! 🌷
+            </p>
+            <img
+              src="https://placehold.co/600x400/9ca3af/ffffff?text=Jardim+do+Condom%C3%ADnio"
+              alt="Imagem da Publicação"
+              class="w-full rounded-md mb-3"
+            />
+            <div class="flex items-center space-x-4 text-gray-400">
+              <button
+                class="like-btn flex items-center space-x-1 hover:text-indigo-400"
+                data-liked="false"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+                <span class="likes-count">30</span>
+              </button>
+              <button
+                class="comment-btn flex items-center space-x-1 hover:text-indigo-400"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <span class="comment-count">1</span>
+              </button>
+            </div>
+            <div class="comments-section" data-post-id="3">
+              <div class="comments-list mt-2 space-y-2 text-sm text-gray-400">
+                <div class="p-2 rounded-md bg-gray-700">
+                  <p class="font-semibold text-gray-300">Paula</p>
+                  <p>
+                    O jardineiro é incrível! Ele se dedica muito ao condomínio.
+                  </p>
+                </div>
+              </div>
+              <div class="add-comment-form mt-2 flex items-center space-x-2">
+                <input
+                  type="text"
+                  class="comment-input w-full px-4 py-2 rounded-full bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  placeholder="Escreva um comentário..."
+                />
+                <button
+                  class="send-comment-btn bg-indigo-600 text-white rounded-full p-2 hover:bg-indigo-500 transition-colors duration-300"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 transform rotate-90"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="post bg-gray-800 rounded-lg shadow-sm p-4 mb-4"
+            data-post-id="4"
+          >
+            <div class="flex items-center mb-2">
+              <img
+                src="https://placehold.co/40x40/d6d3d1/ffffff?text=E"
+                alt="Foto de Perfil do Usuário"
+                class="rounded-full mr-3 border-2 border-stone-400"
+              />
+              <div>
+                <p class="font-bold text-gray-200">
+                  Equipe de Limpeza
+                  <span class="text-sm text-gray-400 font-normal"
+                    >・ 3 dias atrás</span
+                  >
+                </p>
+                <p class="text-xs text-gray-400">Serviço</p>
+              </div>
+            </div>
+            <p class="text-gray-300 mb-3">
+              Oferecemos serviço de limpeza de apartamentos. Interessados podem
+              entrar em contato por mensagem privada.
+            </p>
+            <div class="flex items-center space-x-4 text-gray-400">
+              <button
+                class="like-btn flex items-center space-x-1 hover:text-indigo-400"
+                data-liked="false"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+                <span class="likes-count">8</span>
+              </button>
+              <button
+                class="comment-btn flex items-center space-x-1 hover:text-indigo-400"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <span class="comment-count">1</span>
+              </button>
+            </div>
+            <div class="comments-section" data-post-id="4">
+              <div class="comments-list mt-2 space-y-2 text-sm text-gray-400">
+                <div class="p-2 rounded-md bg-gray-700">
+                  <p class="font-semibold text-gray-300">Síndico</p>
+                  <p>Excelente iniciativa para a comunidade!</p>
+                </div>
+              </div>
+              <div class="add-comment-form mt-2 flex items-center space-x-2">
+                <input
+                  type="text"
+                  class="comment-input w-full px-4 py-2 rounded-full bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  placeholder="Escreva um comentário..."
+                />
+                <button
+                  class="send-comment-btn bg-indigo-600 text-white rounded-full p-2 hover:bg-indigo-500 transition-colors duration-300"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 transform rotate-90"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="explore" class="tab-content p-4">
+        <h2 class="text-2xl font-semibold mb-4 text-gray-100">
+          Explorar e Serviços
+        </h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          <div class="bg-gray-800 rounded-lg shadow-sm p-4 text-center">
+            <p class="text-indigo-400 text-3xl mb-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-8 w-8 mx-auto"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </p>
+            <p class="font-bold text-gray-300">Moradores</p>
+          </div>
+          <div class="bg-gray-800 rounded-lg shadow-sm p-4 text-center">
+            <p class="text-indigo-400 text-3xl mb-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-8 w-8 mx-auto"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 6.5V17.5M12 6.5a4 4 0 00-4 4v7h8v-7a4 4 0 00-4-4z"
+                />
+              </svg>
+            </p>
+            <p class="font-bold text-gray-300">Serviços</p>
+          </div>
+          <div class="bg-gray-800 rounded-lg shadow-sm p-4 text-center">
+            <p class="text-indigo-400 text-3xl mb-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-8 w-8 mx-auto"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 6l3 1v16h12V7l3-1M6 6v-2a2 2 0 012-2h8a2 2 0 012 2v2M8 7V5h8v2M12 11v6m-3-3h6"
+                />
+              </svg>
+            </p>
+            <p class="font-bold text-gray-300">Marketplace</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="reservations" class="tab-content p-4">
+        <h2 class="text-2xl font-semibold mb-4 text-gray-100">
+          Reservas e Eventos
+        </h2>
+        <div class="bg-gray-800 rounded-lg shadow-sm p-4">
+          <h3 class="font-bold text-lg mb-4 text-gray-200">Áreas Comuns</h3>
+          <ul id="reservations-list" class="space-y-4 text-gray-300">
+            <li class="p-2 rounded-md bg-gray-700">
+              <div class="flex items-center justify-between mb-2">
+                <span>Salão de Festas</span>
+                <button
+                  class="bg-indigo-600 text-white px-3 py-1 text-sm rounded-md hover:bg-indigo-500"
+                >
+                  Reservar
+                </button>
+              </div>
+              <div class="border-t border-gray-600 pt-2">
+                <p class="text-xs text-gray-400 font-semibold mb-1">
+                  Datas Reservadas:
+                </p>
+                <span class="text-sm text-red-400">10/11, 15/11, 22/11</span>
+              </div>
+            </li>
+            <li class="p-2 rounded-md bg-gray-700">
+              <div class="flex items-center justify-between mb-2">
+                <span>Churrasqueira</span>
+                <button
+                  class="bg-indigo-600 text-white px-3 py-1 text-sm rounded-md hover:bg-indigo-500"
+                >
+                  Reservar
+                </button>
+              </div>
+              <div class="border-t border-gray-600 pt-2">
+                <p class="text-xs text-gray-400 font-semibold mb-1">
+                  Datas Reservadas:
+                </p>
+                <span class="text-sm text-red-400">05/11, 12/11, 13/11</span>
+              </div>
+            </li>
+            <li class="p-2 rounded-md bg-gray-700">
+              <div class="flex items-center justify-between mb-2">
+                <span>Quadra Poliesportiva</span>
+                <button
+                  class="bg-indigo-600 text-white px-3 py-1 text-sm rounded-md hover:bg-indigo-500"
+                >
+                  Reservar
+                </button>
+              </div>
+              <div class="border-t border-gray-600 pt-2">
+                <p class="text-xs text-gray-400 font-semibold mb-1">
+                  Datas Reservadas:
+                </p>
+                <span class="text-sm text-red-400">18/11, 19/11, 25/11</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="messages" class="tab-content p-4">
+        <h2 class="text-2xl font-semibold mb-4 text-gray-100">Mensagens</h2>
+        <div class="space-y-2">
+          <div
+            class="chat-item flex items-center p-3 rounded-lg bg-gray-800 shadow-sm hover:bg-gray-700 cursor-pointer"
+            data-chat-id="admin"
+          >
+            <img
+              src="https://placehold.co/50x50/6366f1/ffffff?text=A"
+              alt="Foto de Perfil"
+              class="rounded-full mr-4 border-2 border-indigo-400"
+            />
+            <div>
+              <p class="font-bold text-gray-200">Administração</p>
+              <p class="text-sm text-gray-400 truncate">
+                Amanhã teremos manutenção no elevador...
+              </p>
+            </div>
+          </div>
+          <div
+            class="chat-item flex items-center p-3 rounded-lg bg-gray-800 shadow-sm hover:bg-gray-700 cursor-pointer"
+            data-chat-id="vania"
+          >
+            <img
+              src="https://placehold.co/50x50/93c5fd/ffffff?text=V"
+              alt="Foto de Perfil"
+              class="rounded-full mr-4 border-2 border-blue-400"
+            />
+            <div>
+              <p class="font-bold text-gray-200">Vania (Apto 205)</p>
+              <p class="text-sm text-gray-400 truncate">
+                Obrigado por me ajudar a carregar as compras!
+              </p>
+            </div>
+          </div>
+          <div
+            class="chat-item flex items-center p-3 rounded-lg bg-gray-800 shadow-sm hover:bg-gray-700 cursor-pointer"
+            data-chat-id="grupo_a"
+          >
+            <img
+              src="https://placehold.co/50x50/34d399/ffffff?text=G"
+              alt="Ícone de Grupo"
+              class="rounded-full mr-4 border-2 border-emerald-400"
+            />
+            <div>
+              <p class="font-bold text-gray-200">Grupo do Bloco A</p>
+              <p class="text-sm text-gray-400 truncate">
+                Alguém viu a chave do salão de festas?
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="profile" class="tab-content p-4">
+        <h2 class="text-2xl font-semibold mb-4 text-gray-100">Perfil</h2>
+        <div
+          class="bg-gray-800 rounded-lg shadow-sm p-6 mb-4 flex flex-col items-center"
+        >
+          <img
+            src="https://placehold.co/100x100/6366f1/ffffff?text=U"
+            alt="Foto de Perfil do Usuário"
+            class="rounded-full mb-4 border-4 border-indigo-400"
+          />
+          <h3 id="user-name" class="text-xl font-bold text-gray-200"></h3>
+          <p class="text-gray-400" id="user-apartment"></p>
+        </div>
+        <div class="bg-gray-800 rounded-lg shadow-sm p-4 mb-4">
+          <h3 class="font-bold text-lg mb-2 text-gray-200">Informações</h3>
+          <ul class="space-y-2 text-gray-300">
+            <li><span class="font-semibold">Veículo:</span> Honda Civic</li>
+            <li>
+              <span class="font-semibold">Histórico de Reservas:</span>
+              Churrasqueira (15/08)
+            </li>
+            <li><span class="font-semibold">Minhas Publicações:</span> 2</li>
+          </ul>
+        </div>
+        <div
+          id="warnings-section"
+          class="bg-gray-800 rounded-lg shadow-sm p-4 hidden"
+        >
+          <h3 class="font-bold text-lg mb-2 text-red-400">
+            Advertências Recebidas
+          </h3>
+          <ul id="warnings-list" class="space-y-2 text-gray-300"></ul>
+        </div>
+      </div>
+    </main>
+
+    <button
+      id="add-post-btn"
+      class="bg-indigo-600 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-indigo-500 transition-colors duration-300"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-8 w-8"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+        />
+      </svg>
+    </button>
+
+    <div id="floating-menu">
+      <button
+        id="add-post-option"
+        class="w-full text-left py-2 px-4 rounded-md hover:bg-gray-600 hidden"
+      >
+        Nova Publicação
+      </button>
+      <button
+        id="add-notice-option"
+        class="w-full text-left py-2 px-4 rounded-md hover:bg-gray-600 hidden"
+      >
+        Novo Aviso
+      </button>
+      <button
+        id="add-warning-option"
+        class="w-full text-left py-2 px-4 rounded-md hover:bg-gray-600 hidden"
+      >
+        Nova Advertência
+      </button>
+    </div>
+
+    <div id="add-notice-screen" class="hidden">
+      <div class="bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-sm">
+        <h2 class="text-2xl font-bold text-gray-200 mb-4 text-center">
+          Novo Aviso
+        </h2>
+        <form id="notice-form" class="space-y-4">
+          <div>
+            <label
+              for="notice-title"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >Título do Aviso</label
+            >
+            <input
+              type="text"
+              id="notice-title"
+              placeholder="Ex: Manutenção na piscina"
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div>
+            <label
+              for="notice-text"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >Texto do Aviso</label
+            >
+            <textarea
+              id="notice-text"
+              rows="4"
+              placeholder="Detalhes importantes para os moradores..."
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            ></textarea>
+          </div>
+          <div class="flex justify-between space-x-2">
+            <button
+              type="button"
+              id="cancel-notice-btn"
+              class="w-1/2 bg-gray-600 text-white font-bold py-2 rounded-lg hover:bg-gray-500 transition-colors duration-300"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="w-1/2 bg-indigo-600 text-white font-bold py-2 rounded-lg hover:bg-indigo-500 transition-colors duration-300"
+            >
+              Publicar Aviso
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="add-warning-screen" class="hidden">
+      <div class="bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-sm">
+        <h2 class="text-2xl font-bold text-gray-200 mb-4 text-center">
+          Nova Advertência
+        </h2>
+        <form id="warning-form" class="space-y-4">
+          <div>
+            <label
+              for="tenant-select"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >Morador</label
+            >
+            <select
+              id="tenant-select"
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+            >
+              <option value="morador">Maria Silva (Apto 302)</option>
+              <option value="joao">João Silva (Apto 101)</option>
+              <option value="carlos">Carlos (Apto 502)</option>
+            </select>
+          </div>
+          <div>
+            <label
+              for="warning-reason"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >Motivo da Advertência</label
+            >
+            <textarea
+              id="warning-reason"
+              rows="3"
+              placeholder="Ex: Barulho excessivo no salão de festas..."
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+            ></textarea>
+          </div>
+          <div>
+            <label
+              for="warning-image-url"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >URL da Imagem (Opcional)</label
+            >
+            <input
+              type="text"
+              id="warning-image-url"
+              placeholder="https://exemplo.com/evidencia.jpg"
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+            />
+          </div>
+          <div class="flex justify-between space-x-2">
+            <button
+              type="button"
+              id="cancel-warning-btn"
+              class="w-1/2 bg-gray-600 text-white font-bold py-2 rounded-lg hover:bg-gray-500 transition-colors duration-300"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="w-1/2 bg-red-600 text-white font-bold py-2 rounded-lg hover:bg-red-500 transition-colors duration-300"
+            >
+              Enviar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="add-post-screen" class="hidden">
+      <div class="bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-sm">
+        <h2 class="text-2xl font-bold text-gray-200 mb-4 text-center">
+          Nova Publicação
+        </h2>
+        <form id="post-form" class="space-y-4">
+          <div>
+            <label
+              for="post-text"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >Texto da Publicação</label
+            >
+            <textarea
+              id="post-text"
+              rows="4"
+              placeholder="O que você gostaria de compartilhar?"
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            ></textarea>
+          </div>
+          <div>
+            <label
+              for="post-image-url"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >URL da Imagem (Opcional)</label
+            >
+            <input
+              type="text"
+              id="post-image-url"
+              placeholder="https://exemplo.com/imagem.jpg"
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div class="flex justify-between space-x-2">
+            <button
+              type="button"
+              id="cancel-post-btn"
+              class="w-1/2 bg-gray-600 text-white font-bold py-2 rounded-lg hover:bg-gray-500 transition-colors duration-300"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="w-1/2 bg-indigo-600 text-white font-bold py-2 rounded-lg hover:bg-indigo-500 transition-colors duration-300"
+            >
+              Publicar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <nav
+      class="bg-gray-800 shadow-lg p-4 flex justify-around items-center sticky bottom-0 z-10 hidden"
+      id="main-nav"
+    >
+      <button
+        id="home-tab"
+        class="btn-tab flex flex-col items-center text-gray-600 hover:text-indigo-400 active"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path d="M12 6.94l-5.636 5.636L12 18.212l5.636-5.636L12 6.94z" />
+          <path
+            d="M12 2L.892 12.108 12 23.216 23.108 12.108 12 2zM12 4.414l9.108 9.108-9.108 9.108-9.108-9.108L12 4.414z"
+          />
+        </svg>
+        <span class="text-xs text-gray-400">Home</span>
+      </button>
+      <button
+        id="explore-tab"
+        class="btn-tab flex flex-col items-center text-gray-600 hover:text-indigo-400"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
+        </svg>
+        <span class="text-xs text-gray-400">Explorar</span>
+      </button>
+      <button
+        id="reservations-tab"
+        class="btn-tab flex flex-col items-center text-gray-600 hover:text-indigo-400"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M8 7V3h8v4m-4 0v14m-5-9H3m18 0h-3m-6 3H9m12 0h-3"
+          />
+        </svg>
+        <span class="text-xs text-gray-400">Reservas</span>
+      </button>
+      <button
+        id="messages-tab"
+        class="btn-tab flex flex-col items-center text-gray-600 hover:text-indigo-400"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M8 10h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+        <span class="text-xs text-gray-400">Mensagens</span>
+      </button>
+      <button
+        id="profile-tab"
+        class="btn-tab flex flex-col items-center text-gray-600 hover:text-indigo-400"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 4a4 4 0 100 8 4 4 0 000-8zM12 14c-4.418 0-8 3.582-8 8h16c0-4.418-3.582-8-8-8z"
+          />
+        </svg>
+        <span class="text-xs text-gray-400">Perfil</span>
+      </button>
+    </nav>
+
+    <div id="chat-window" class="hidden">
+      <div
+        class="bg-gray-800 shadow-lg p-4 flex items-center sticky top-0 z-10"
+      >
+        <button
+          id="back-to-messages"
+          class="text-gray-400 hover:text-gray-200 mr-4"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
+        <h2 id="chat-name" class="text-xl font-bold text-gray-200"></h2>
+      </div>
+
+      <div id="chat-body" class="flex-grow overflow-y-auto p-4 space-y-4"></div>
+
+      <div
+        class="bg-gray-800 shadow-lg p-4 flex items-center space-x-2 sticky bottom-0"
+      >
+        <input
+          id="message-input"
+          type="text"
+          placeholder="Escreva uma mensagem..."
+          class="flex-grow px-4 py-2 rounded-full bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        />
+        <button
+          id="send-btn"
+          class="bg-indigo-600 text-white rounded-full p-2 hover:bg-indigo-500 transition-colors duration-300"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 transform rotate-90"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M14 5l7 7m0 0l-7 7m7-7H3"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Seletores de elementos HTML
+        const loginScreen = document.getElementById("login-screen")
+        const loginForm = document.getElementById("login-form")
+        const loginError = document.getElementById("login-error")
+        const mainHeader = document.getElementById("main-header")
+        const mainContent = document.getElementById("main-content")
+        const mainNav = document.getElementById("main-nav")
+        const addPostBtn = document.getElementById("add-post-btn")
+        const floatingMenu = document.getElementById("floating-menu")
+        const addPostOption = document.getElementById("add-post-option")
+        const addWarningOption = document.getElementById("add-warning-option")
+        const addNoticeOption = document.getElementById("add-notice-option")
+        const userName = document.getElementById("user-name")
+        const userApartment = document.getElementById("user-apartment")
+        const warningsSection = document.getElementById("warnings-section")
+        const warningsList = document.getElementById("warnings-list")
+        const addWarningScreen = document.getElementById("add-warning-screen")
+        const warningForm = document.getElementById("warning-form")
+        const cancelWarningBtn = document.getElementById("cancel-warning-btn")
+        const addPostScreen = document.getElementById("add-post-screen")
+        const postForm = document.getElementById("post-form")
+        const cancelPostBtn = document.getElementById("cancel-post-btn")
+        const addNoticeScreen = document.getElementById("add-notice-screen")
+        const noticeForm = document.getElementById("notice-form")
+        const cancelNoticeBtn = document.getElementById("cancel-notice-btn")
+        const feedContainer = document.getElementById("feed-container")
+
+        const tabs = document.querySelectorAll(".btn-tab")
+        const contents = document.querySelectorAll(".tab-content")
+        const chatItems = document.querySelectorAll(".chat-item")
+        const chatWindow = document.getElementById("chat-window")
+        const chatBody = document.getElementById("chat-body")
+        const chatName = document.getElementById("chat-name")
+        const backBtn = document.getElementById("back-to-messages")
+        const messageInput = document.getElementById("message-input")
+        const sendBtn = document.getElementById("send-btn")
+
+        // Simulações de banco de dados e estado do usuário
+        let currentUserRole = "morador"
+        let currentUser = {
+          name: "Maria Silva",
+          apartment: "Apto 302",
+          initials: "M",
+        }
+
+        // Simula um banco de dados de posts
+        const posts = {
+          1: { likes: 25, isLiked: false },
+          2: { likes: 12, isLiked: false },
+          3: { likes: 30, isLiked: false },
+          4: { likes: 8, isLiked: false },
+        }
+
+        // Simula um banco de dados de comentários
+        const comments = {
+          1: [
+            { user: "João", text: "Ficou ótimo! Parabéns pela iniciativa." },
+            { user: "Ana", text: "Já testei e aprovei! Muito bom." },
+          ],
+          2: [
+            {
+              user: "Maria",
+              text: "Posso te emprestar a minha! Me chama no chat.",
+            },
+          ],
+          3: [
+            {
+              user: "Paula",
+              text: "O jardineiro é incrível! Ele se dedica muito ao condomínio.",
+            },
+          ],
+          4: [
+            {
+              user: "Síndico",
+              text: "Excelente iniciativa para a comunidade!",
+            },
+          ],
+        }
+
+        const chatHistory = {
+          admin: [
+            {
+              sender: "received",
+              text: "Olá! A manutenção do elevador foi agendada para amanhã.",
+            },
+            { sender: "sent", text: "Ok, obrigado pelo aviso!" },
+          ],
+          vania: [
+            {
+              sender: "received",
+              text: "Olá, você ainda está precisando de ajuda com a furadeira?",
+            },
+            {
+              sender: "sent",
+              text: "Sim! Se puder me emprestar, eu agradeço muito.",
+            },
+          ],
+          grupo_a: [
+            {
+              sender: "received",
+              text: "Alguém viu a chave do salão de festas?",
+            },
+            {
+              sender: "sent",
+              text: "Acho que está com o porteiro, vou verificar.",
+            },
+          ],
+        }
+
+        const userWarnings = [
+          {
+            id: 1,
+            reason: "Barulho alto após 22h",
+            date: "15/10/2023",
+            imageUrl:
+              "https://placehold.co/400x300/f87171/ffffff?text=Evid%C3%AAncia",
+          },
+          { id: 2, reason: "Descarte irregular de lixo", date: "20/10/2023" },
+        ]
+
+        // Simulação de avisos oficiais
+        let officialNotices = [
+          {
+            id: "notice-1",
+            title: "Manutenção programada nos elevadores",
+            text: "Quarta-feira (28) das 10h às 12h. Pedimos que programem suas saídas.",
+            date: "28/11/2023",
+          },
+        ]
+
+        // Evento para o formulário de login
+        loginForm.addEventListener("submit", (e) => {
+          e.preventDefault()
+          const username = document.getElementById("username").value
+          const password = document.getElementById("password").value
+
+          if (username === "admin" && password === "admin") {
+            currentUserRole = "admin"
+            currentUser = {
+              name: "Administrador",
+              apartment: "Condomínio",
+              initials: "A",
+            }
+            loginScreen.style.display = "none"
+            mainHeader.classList.remove("hidden")
+            mainContent.classList.remove("hidden")
+            mainNav.classList.remove("hidden")
+            userName.textContent = currentUser.name
+            userApartment.textContent = currentUser.apartment
+            showAdminFeatures()
+          } else if (username === "morador" && password === "123") {
+            currentUserRole = "morador"
+            currentUser = {
+              name: "Maria Silva",
+              apartment: "Apto 302",
+              initials: "M",
+            }
+            loginScreen.style.display = "none"
+            mainHeader.classList.remove("hidden")
+            mainContent.classList.remove("hidden")
+            mainNav.classList.remove("hidden")
+            userName.textContent = currentUser.name
+            userApartment.textContent = currentUser.apartment
+            showUserFeatures()
+          } else {
+            loginError.style.display = "block"
+          }
+        })
+
+        // Mostra recursos específicos para o administrador
+        function showAdminFeatures() {
+          addPostBtn.classList.remove("bg-indigo-600")
+          addPostBtn.classList.add("bg-amber-500")
+          addWarningOption.classList.remove("hidden")
+          addNoticeOption.classList.remove("hidden")
+          addPostOption.classList.add("hidden") // Esconde a opção de "Nova Publicação" para o admin
+          addPostBtn.addEventListener("click", () => {
+            floatingMenu.style.display =
+              floatingMenu.style.display === "flex" ? "none" : "flex"
+          })
+          renderNotices()
+        }
+
+        // Mostra recursos específicos para o morador
+        function showUserFeatures() {
+          addPostBtn.classList.remove("bg-amber-500")
+          addPostBtn.classList.add("bg-indigo-600")
+          addWarningOption.classList.add("hidden")
+          addNoticeOption.classList.add("hidden") // Esconde a opção de "Novo Aviso" para o morador
+          addPostOption.classList.remove("hidden")
+          addPostBtn.style.display = "flex"
+          warningsSection.style.display = "block"
+          renderWarnings()
+          addPostBtn.addEventListener("click", () => {
+            floatingMenu.style.display =
+              floatingMenu.style.display === "flex" ? "none" : "flex"
+          })
+          renderNotices()
+        }
+
+        // Renderiza a lista de advertências no perfil
+        function renderWarnings() {
+          warningsList.innerHTML = ""
+          if (userWarnings.length === 0) {
+            warningsList.innerHTML =
+              '<li class="text-sm text-gray-400">Nenhuma advertência registrada.</li>'
+          } else {
+            userWarnings.forEach((warning) => {
+              const li = document.createElement("li")
+              li.className = "p-2 rounded-md bg-gray-700 space-y-2"
+              let imageHtml = ""
+              if (warning.imageUrl) {
+                imageHtml = `<img src="${warning.imageUrl}" alt="Evidência da advertência" class="w-full rounded-md mt-2">`
+              }
+              li.innerHTML = `
+                            <div class="flex justify-between items-center">
+                                <span>${warning.reason}</span>
+                                <span class="text-xs text-gray-400">${warning.date}</span>
+                            </div>
+                            ${imageHtml}
+                        `
+              warningsList.appendChild(li)
+            })
+          }
+        }
+
+        // Cria uma nova publicação no feed
+        function createNewPost(text, imageUrl) {
+          const newPostId = "post-" + Date.now()
+          posts[newPostId] = { likes: 0, isLiked: false }
+          comments[newPostId] = []
+
+          const newPostElement = document.createElement("div")
+          newPostElement.className =
+            "post bg-gray-800 rounded-lg shadow-sm p-4 mb-4"
+          newPostElement.dataset.postId = newPostId
+
+          let imageHtml = ""
+          if (imageUrl) {
+            imageHtml = `<img src="${imageUrl}" alt="Imagem da Publicação" class="w-full rounded-md mb-3">`
+          }
+
+          newPostElement.innerHTML = `
+                    <div class="flex items-center mb-2">
+                        <img src="https://placehold.co/40x40/93c5fd/ffffff?text=${currentUser.initials}" alt="Foto de Perfil do Usuário" class="rounded-full mr-3 border-2 border-blue-400">
+                        <div>
+                            <p class="font-bold text-gray-200">${currentUser.name} <span class="text-sm text-gray-400 font-normal">・ Agora</span></p>
+                            <p class="text-xs text-gray-400">${currentUser.apartment}</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-3">${text}</p>
+                    ${imageHtml}
+                    <div class="flex items-center space-x-4 text-gray-400">
+                        <button class="like-btn flex items-center space-x-1 hover:text-indigo-400" data-liked="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                            <span class="likes-count">0</span>
+                        </button>
+                        <button class="comment-btn flex items-center space-x-1 hover:text-indigo-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span class="comment-count">0</span>
+                        </button>
+                    </div>
+                    <div class="comments-section" data-post-id="${newPostId}">
+                        <div class="comments-list mt-2 space-y-2 text-sm text-gray-400"></div>
+                        <div class="add-comment-form mt-2 flex items-center space-x-2">
+                            <input type="text" class="comment-input w-full px-4 py-2 rounded-full bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="Escreva um comentário...">
+                            <button class="send-comment-btn bg-indigo-600 text-white rounded-full p-2 hover:bg-indigo-500 transition-colors duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                `
+
+          // Adiciona o novo post logo abaixo do comunicado oficial
+          feedContainer.insertBefore(
+            newPostElement,
+            feedContainer.querySelector(".post")
+          )
+
+          // Reatribui os event listeners aos novos botões
+          setupDynamicEventListeners()
+        }
+
+        // Exibe ou oculta o botão flutuante de adicionar
+        function showCorrectBtn() {
+          if (document.getElementById("home").classList.contains("active")) {
+            addPostBtn.style.display = "flex"
+            floatingMenu.style.display = "none"
+          } else {
+            addPostBtn.style.display = "none"
+          }
+        }
+
+        // Exibe as mensagens de um chat específico
+        function renderMessages(chatId) {
+          chatBody.innerHTML = ""
+          const messages = chatHistory[chatId]
+          messages.forEach((msg) => {
+            const bubble = document.createElement("div")
+            bubble.classList.add("message-bubble", msg.sender)
+            bubble.textContent = msg.text
+            chatBody.appendChild(bubble)
+          })
+          chatBody.scrollTop = chatBody.scrollHeight
+        }
+
+        // Envia uma nova mensagem no chat
+        function sendMessage() {
+          const text = messageInput.value.trim()
+          if (text) {
+            const bubble = document.createElement("div")
+            bubble.classList.add("message-bubble", "sent")
+            bubble.textContent = text
+            chatBody.appendChild(bubble)
+            messageInput.value = ""
+            chatBody.scrollTop = chatBody.scrollHeight
+          }
+        }
+
+        // Função para exibir os comentários de um post
+        function renderComments(postId) {
+          const commentsList = document.querySelector(
+            `.comments-section[data-post-id="${postId}"] .comments-list`
+          )
+          commentsList.innerHTML = ""
+          if (comments[postId] && comments[postId].length > 0) {
+            comments[postId].forEach((comment) => {
+              const commentElement = document.createElement("div")
+              commentElement.className = "p-2 rounded-md bg-gray-700"
+              commentElement.innerHTML = `<p class="font-semibold text-gray-300">${comment.user}</p><p>${comment.text}</p>`
+              commentsList.appendChild(commentElement)
+            })
+          } else {
+            commentsList.innerHTML =
+              '<p class="text-xs text-gray-500">Nenhum comentário ainda.</p>'
+          }
+        }
+
+        // Adiciona um novo comentário a um post
+        function addComment(postId, commentText) {
+          if (commentText.trim() === "") return
+
+          const newComment = { user: currentUser.name, text: commentText }
+          if (!comments[postId]) {
+            comments[postId] = []
+          }
+          comments[postId].push(newComment)
+
+          // Atualiza a contagem de comentários na UI
+          const postElement = document.querySelector(
+            `.post[data-post-id="${postId}"]`
+          )
+          const commentCountSpan = postElement.querySelector(".comment-count")
+          commentCountSpan.textContent = comments[postId].length
+
+          renderComments(postId)
+        }
+
+        // Renderiza os avisos oficiais
+        function renderNotices() {
+          // Remove todos os avisos existentes da interface
+          document
+            .querySelectorAll(".official-notice")
+            .forEach((el) => el.remove())
+
+          // Adiciona os avisos dinamicamente
+          officialNotices.forEach((notice) => {
+            const noticeElement = document.createElement("div")
+            noticeElement.id = notice.id
+            noticeElement.className =
+              "official-notice bg-gray-800 rounded-lg shadow-sm p-4 mb-4 border-l-4 border-indigo-500 flex justify-between items-start"
+
+            const deleteBtnHtml =
+              currentUserRole === "admin"
+                ? `
+                        <button class="delete-notice-btn text-gray-400 hover:text-red-500 ml-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.234 21H7.766a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
+                    `
+                : ""
+
+            noticeElement.innerHTML = `
+                        <div>
+                            <span class="bg-indigo-500 text-white text-xs font-bold px-2 py-1 rounded-full">Comunicado Oficial</span>
+                            <h3 class="text-lg font-bold text-gray-200 mt-2">${notice.title}</h3>
+                            <p class="text-sm text-gray-300">${notice.text}</p>
+                        </div>
+                        ${deleteBtnHtml}
+                    `
+            feedContainer.prepend(noticeElement)
+          })
+
+          // Reatribui os event listeners aos botões de apagar
+          setupDynamicEventListeners()
+        }
+
+        // Configura todos os event listeners dinâmicos (Curtir, Comentar, Deletar Aviso)
+        function setupDynamicEventListeners() {
+          // Remove os listeners antigos para evitar duplicação
+          document
+            .querySelectorAll(".like-btn")
+            .forEach((btn) => btn.removeEventListener("click", handleLike))
+          document
+            .querySelectorAll(".comment-btn")
+            .forEach((btn) =>
+              btn.removeEventListener("click", handleCommentClick)
+            )
+          document
+            .querySelectorAll(".send-comment-btn")
+            .forEach((btn) =>
+              btn.removeEventListener("click", handleSendComment)
+            )
+          document
+            .querySelectorAll(".comment-input")
+            .forEach((input) =>
+              input.removeEventListener("keypress", handleSendCommentOnEnter)
+            )
+          document
+            .querySelectorAll(".delete-notice-btn")
+            .forEach((btn) =>
+              btn.removeEventListener("click", handleDeleteNotice)
+            )
+
+          // Adiciona novos listeners
+          document
+            .querySelectorAll(".like-btn")
+            .forEach((btn) => btn.addEventListener("click", handleLike))
+          document
+            .querySelectorAll(".comment-btn")
+            .forEach((btn) => btn.addEventListener("click", handleCommentClick))
+          document
+            .querySelectorAll(".send-comment-btn")
+            .forEach((btn) => btn.addEventListener("click", handleSendComment))
+          document
+            .querySelectorAll(".comment-input")
+            .forEach((input) =>
+              input.addEventListener("keypress", handleSendCommentOnEnter)
+            )
+          document
+            .querySelectorAll(".delete-notice-btn")
+            .forEach((btn) => btn.addEventListener("click", handleDeleteNotice))
+        }
+
+        // Tratador de evento para curtidas
+        function handleLike(event) {
+          const btn = event.currentTarget
+          const postId = btn.closest(".post").dataset.postId
+          const likesCountSpan = btn.querySelector(".likes-count")
+          const svgPath = btn.querySelector("svg path")
+          const isLiked = btn.dataset.liked === "true"
+
+          if (!isLiked) {
+            posts[postId].likes++
+            btn.dataset.liked = "true"
+            btn.classList.remove("text-gray-400")
+            btn.classList.add("text-red-500")
+            svgPath.setAttribute("fill", "currentColor")
+          } else {
+            posts[postId].likes--
+            btn.dataset.liked = "false"
+            btn.classList.remove("text-red-500")
+            btn.classList.add("text-gray-400")
+            svgPath.setAttribute("fill", "none")
+          }
+          likesCountSpan.textContent = posts[postId].likes
+        }
+
+        // Tratador de evento para clique no botão de comentário
+        function handleCommentClick(event) {
+          const btn = event.currentTarget
+          const postId = btn.closest(".post").dataset.postId
+          const commentsSection = document.querySelector(
+            `.comments-section[data-post-id="${postId}"]`
+          )
+
+          // Alterna a visibilidade da seção de comentários
+          if (commentsSection.style.display === "block") {
+            commentsSection.style.display = "none"
+          } else {
+            commentsSection.style.display = "block"
+            renderComments(postId)
+          }
+        }
+
+        // Tratador de evento para enviar comentário
+        function handleSendComment(event) {
+          const postElement = event.currentTarget.closest(".post")
+          const postId = postElement.dataset.postId
+          const commentInput = postElement.querySelector(".comment-input")
+          const commentText = commentInput.value
+
+          if (commentText.trim() !== "") {
+            addComment(postId, commentText)
+            commentInput.value = ""
+          }
+        }
+
+        // Tratador de evento para enviar comentário com a tecla Enter
+        function handleSendCommentOnEnter(e) {
+          if (e.key === "Enter") {
+            e.preventDefault()
+            handleSendComment(e)
+          }
+        }
+
+        // Tratador de evento para deletar um aviso
+        function handleDeleteNotice(event) {
+          const noticeElement = event.currentTarget.closest(".official-notice")
+          const noticeId = noticeElement.id
+
+          // Remove o aviso do array de avisos
+          officialNotices = officialNotices.filter(
+            (notice) => notice.id !== noticeId
+          )
+
+          // Remove o aviso da interface
+          noticeElement.remove()
+        }
+
+        // Event listener para os botões da barra de navegação (abas)
+        tabs.forEach((tab) => {
+          tab.addEventListener("click", () => {
+            tabs.forEach((t) => t.classList.remove("active"))
+            contents.forEach((c) => c.classList.remove("active"))
+            tab.classList.add("active")
+            const targetId = tab.id.replace("-tab", "")
+            document.getElementById(targetId).classList.add("active")
+            showCorrectBtn()
+            chatWindow.classList.remove("active")
+            addPostScreen.style.display = "none"
+            addWarningScreen.style.display = "none"
+            addNoticeScreen.style.display = "none"
+            // Esconde a seção de advertências se não for a aba de perfil
+            if (targetId !== "profile") {
+              warningsSection.style.display = "none"
+            } else {
+              renderWarnings()
+            }
+          })
+        })
+
+        // Event listener para os itens da lista de chat
+        chatItems.forEach((item) => {
+          item.addEventListener("click", (event) => {
+            const chatId = item.getAttribute("data-chat-id")
+            const chatTitle = item.querySelector(".font-bold").textContent
+            document.getElementById("messages").classList.remove("active")
+            chatWindow.classList.add("active")
+            chatName.textContent = chatTitle
+            renderMessages(chatId)
+          })
+        })
+
+        // Event listener para o botão de voltar do chat
+        backBtn.addEventListener("click", () => {
+          chatWindow.classList.remove("active")
+          document.getElementById("messages").classList.add("active")
+        })
+
+        // Event listener para o botão de enviar mensagem do chat
+        sendBtn.addEventListener("click", sendMessage)
+        messageInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            sendMessage()
+          }
+        })
+
+        // Eventos do menu flutuante
+        addPostOption.addEventListener("click", () => {
+          floatingMenu.style.display = "none"
+          mainContent.classList.add("hidden")
+          mainNav.classList.add("hidden")
+          mainHeader.classList.add("hidden")
+          addPostScreen.style.display = "flex"
+        })
+
+        addNoticeOption.addEventListener("click", () => {
+          floatingMenu.style.display = "none"
+          mainContent.classList.add("hidden")
+          mainNav.classList.add("hidden")
+          mainHeader.classList.add("hidden")
+          addNoticeScreen.style.display = "flex"
+        })
+
+        addWarningOption.addEventListener("click", () => {
+          floatingMenu.style.display = "none"
+          mainContent.classList.add("hidden")
+          mainNav.classList.add("hidden")
+          mainHeader.classList.add("hidden")
+          addWarningScreen.style.display = "flex"
+        })
+
+        // Eventos da tela de criação de aviso
+        cancelNoticeBtn.addEventListener("click", () => {
+          addNoticeScreen.style.display = "none"
+          mainHeader.classList.remove("hidden")
+          mainContent.classList.remove("hidden")
+          mainNav.classList.remove("hidden")
+        })
+
+        noticeForm.addEventListener("submit", (e) => {
+          e.preventDefault()
+          const noticeTitle = document.getElementById("notice-title").value
+          const noticeText = document.getElementById("notice-text").value
+          const noticeDate = new Date().toLocaleDateString("pt-BR")
+          const noticeId = "notice-" + Date.now()
+
+          if (noticeTitle.trim() === "" || noticeText.trim() === "") {
+            alert("Por favor, preencha todos os campos do aviso.")
+            return
+          }
+
+          // Cria um novo aviso
+          const newNotice = {
+            id: noticeId,
+            title: noticeTitle,
+            text: noticeText,
+            date: noticeDate,
+          }
+
+          // Adiciona o novo aviso ao array
+          officialNotices.unshift(newNotice)
+
+          // Re-renderiza a lista de avisos
+          renderNotices()
+
+          alert("Novo aviso publicado com sucesso!")
+
+          // Reseta o formulário
+          noticeForm.reset()
+
+          // Volta para a tela principal
+          addNoticeScreen.style.display = "none"
+          mainHeader.classList.remove("hidden")
+          mainContent.classList.remove("hidden")
+          mainNav.classList.remove("hidden")
+        })
+
+        // Eventos da tela de criação de advertência
+        cancelWarningBtn.addEventListener("click", () => {
+          addWarningScreen.style.display = "none"
+          mainHeader.classList.remove("hidden")
+          mainContent.classList.remove("hidden")
+          mainNav.classList.remove("hidden")
+        })
+
+        warningForm.addEventListener("submit", (e) => {
+          e.preventDefault()
+          const selectedTenant = document.getElementById("tenant-select").value
+          const warningReason = document.getElementById("warning-reason").value
+          const warningImageUrl =
+            document.getElementById("warning-image-url").value
+
+          if (warningReason.trim() === "") {
+            alert("Por favor, insira o motivo da advertência.")
+            return
+          }
+
+          alert(`Advertência criada para ${selectedTenant}: "${warningReason}"`)
+
+          // Adiciona a nova advertência ao array (simulação)
+          userWarnings.push({
+            id: userWarnings.length + 1,
+            reason: warningReason,
+            date: new Date().toLocaleDateString("pt-BR"),
+            imageUrl: warningImageUrl || null,
+          })
+
+          // Reseta o formulário
+          warningForm.reset()
+
+          // Volta para a tela principal
+          addWarningScreen.style.display = "none"
+          mainHeader.classList.remove("hidden")
+          mainContent.classList.remove("hidden")
+          mainNav.classList.remove("hidden")
+        })
+
+        // Eventos da tela de nova publicação
+        cancelPostBtn.addEventListener("click", () => {
+          addPostScreen.style.display = "none"
+          mainHeader.classList.remove("hidden")
+          mainContent.classList.remove("hidden")
+          mainNav.classList.remove("hidden")
+        })
+
+        postForm.addEventListener("submit", (e) => {
+          e.preventDefault()
+          const postText = document.getElementById("post-text").value
+          const postImageUrl = document.getElementById("post-image-url").value
+
+          if (postText.trim() === "") {
+            alert("Por favor, insira o texto da sua publicação.")
+            return
+          }
+
+          createNewPost(postText, postImageUrl)
+
+          // Reseta o formulário
+          postForm.reset()
+
+          // Volta para a tela principal
+          addPostScreen.style.display = "none"
+          mainHeader.classList.remove("hidden")
+          mainContent.classList.remove("hidden")
+          mainNav.classList.remove("hidden")
+        })
+
+        // Define a contagem inicial de comentários para os posts pré-existentes
+        document.querySelectorAll(".post").forEach((post) => {
+          const postId = post.dataset.postId
+          if (comments[postId]) {
+            const commentCountSpan = post.querySelector(".comment-count")
+            commentCountSpan.textContent = comments[postId].length
+          }
+        })
+
+        // Inicializa os event listeners dinâmicos
+        setupDynamicEventListeners()
+
+        // Mostra o botão flutuante na página inicial
+        showCorrectBtn()
+      })
+    </script>
+  </body>
+</html>
