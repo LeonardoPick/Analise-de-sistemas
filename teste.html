@@ -178,6 +178,31 @@
         align-items: center;
         padding: 1rem;
       }
+
+      .explore-content {
+        display: none;
+      }
+
+      .explore-content.active {
+        display: block;
+      }
+
+      /* Estilos para as novas telas de criação de itens */
+      #add-service-screen,
+      #add-marketplace-screen {
+        display: none;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #1f2937;
+        z-index: 40;
+        justify-content: center;
+        align-items: center;
+        padding: 1rem;
+      }
     </style>
   </head>
   <body class="flex flex-col h-screen">
@@ -676,64 +701,59 @@
         <h2 class="text-2xl font-semibold mb-4 text-gray-100">
           Explorar e Serviços
         </h2>
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          <div class="bg-gray-800 rounded-lg shadow-sm p-4 text-center">
-            <p class="text-indigo-400 text-3xl mb-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-8 w-8 mx-auto"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </p>
-            <p class="font-bold text-gray-300">Moradores</p>
+        <div class="flex space-x-2 mb-4 overflow-x-auto">
+          <button
+            id="residents-tab-explore"
+            class="explore-nav-btn bg-indigo-600 text-white px-4 py-2 rounded-full whitespace-nowrap"
+          >
+            Moradores
+          </button>
+          <button
+            id="services-tab-explore"
+            class="explore-nav-btn bg-gray-700 text-gray-300 px-4 py-2 rounded-full whitespace-nowrap"
+          >
+            Serviços
+          </button>
+          <button
+            id="marketplace-tab-explore"
+            class="explore-nav-btn bg-gray-700 text-gray-300 px-4 py-2 rounded-full whitespace-nowrap"
+          >
+            Marketplace
+          </button>
+        </div>
+        <div id="residents-content" class="explore-content active">
+          <h3 class="text-xl font-semibold mb-3">Moradores do Condomínio</h3>
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+            id="residents-list"
+          ></div>
+        </div>
+        <div id="services-content" class="explore-content">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="text-xl font-semibold">Serviços Oferecidos</h3>
+            <button
+              id="add-service-btn-explore"
+              class="add-explore-item-btn bg-indigo-600 text-white px-3 py-1 rounded-full text-sm hidden"
+            >
+              + Adicionar
+            </button>
           </div>
-          <div class="bg-gray-800 rounded-lg shadow-sm p-4 text-center">
-            <p class="text-indigo-400 text-3xl mb-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-8 w-8 mx-auto"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 6.5V17.5M12 6.5a4 4 0 00-4 4v7h8v-7a4 4 0 00-4-4z"
-                />
-              </svg>
-            </p>
-            <p class="font-bold text-gray-300">Serviços</p>
+          <div class="space-y-4" id="services-list"></div>
+        </div>
+        <div id="marketplace-content" class="explore-content">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="text-xl font-semibold">Marketplace</h3>
+            <button
+              id="add-marketplace-btn-explore"
+              class="add-explore-item-btn bg-indigo-600 text-white px-3 py-1 rounded-full text-sm hidden"
+            >
+              + Adicionar
+            </button>
           </div>
-          <div class="bg-gray-800 rounded-lg shadow-sm p-4 text-center">
-            <p class="text-indigo-400 text-3xl mb-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-8 w-8 mx-auto"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M3 6l3 1v16h12V7l3-1M6 6v-2a2 2 0 012-2h8a2 2 0 012 2v2M8 7V5h8v2M12 11v6m-3-3h6"
-                />
-              </svg>
-            </p>
-            <p class="font-bold text-gray-300">Marketplace</p>
-          </div>
+          <div
+            class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"
+            id="marketplace-list"
+          ></div>
         </div>
       </div>
 
@@ -1095,6 +1115,134 @@
       </div>
     </div>
 
+    <div id="add-service-screen" class="hidden">
+      <div class="bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-sm">
+        <h2 class="text-2xl font-bold text-gray-200 mb-4 text-center">
+          Adicionar Serviço
+        </h2>
+        <form id="add-service-form" class="space-y-4">
+          <div>
+            <label
+              for="service-title"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >Título do Serviço</label
+            >
+            <input
+              type="text"
+              id="service-title"
+              placeholder="Ex: Aula de Violão"
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div>
+            <label
+              for="service-description"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >Descrição</label
+            >
+            <textarea
+              id="service-description"
+              rows="3"
+              placeholder="Detalhe o serviço que você oferece..."
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            ></textarea>
+          </div>
+          <div class="flex justify-between space-x-2">
+            <button
+              type="button"
+              id="cancel-service-btn"
+              class="w-1/2 bg-gray-600 text-white font-bold py-2 rounded-lg hover:bg-gray-500 transition-colors duration-300"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="w-1/2 bg-indigo-600 text-white font-bold py-2 rounded-lg hover:bg-indigo-500 transition-colors duration-300"
+            >
+              Adicionar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="add-marketplace-screen" class="hidden">
+      <div class="bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-sm">
+        <h2 class="text-2xl font-bold text-gray-200 mb-4 text-center">
+          Adicionar ao Marketplace
+        </h2>
+        <form id="add-marketplace-form" class="space-y-4">
+          <div>
+            <label
+              for="marketplace-title"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >Título do Anúncio</label
+            >
+            <input
+              type="text"
+              id="marketplace-title"
+              placeholder="Ex: Bicicleta Usada"
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div>
+            <label
+              for="marketplace-description"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >Descrição</label
+            >
+            <textarea
+              id="marketplace-description"
+              rows="3"
+              placeholder="Detalhe o produto que está vendendo..."
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            ></textarea>
+          </div>
+          <div>
+            <label
+              for="marketplace-price"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >Preço</label
+            >
+            <input
+              type="text"
+              id="marketplace-price"
+              placeholder="Ex: R$ 450,00"
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div>
+            <label
+              for="marketplace-image-url"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >URL da Imagem</label
+            >
+            <input
+              type="text"
+              id="marketplace-image-url"
+              placeholder="https://exemplo.com/produto.jpg"
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div class="flex justify-between space-x-2">
+            <button
+              type="button"
+              id="cancel-marketplace-btn"
+              class="w-1/2 bg-gray-600 text-white font-bold py-2 rounded-lg hover:bg-gray-500 transition-colors duration-300"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="w-1/2 bg-indigo-600 text-white font-bold py-2 rounded-lg hover:bg-indigo-500 transition-colors duration-300"
+            >
+              Adicionar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <nav
       class="bg-gray-800 shadow-lg p-4 flex justify-around items-center sticky bottom-0 z-10 hidden"
       id="main-nav"
@@ -1296,7 +1444,33 @@
         const messageInput = document.getElementById("message-input")
         const sendBtn = document.getElementById("send-btn")
 
-        // Simulações de banco de dados e estado do usuário
+        // Elementos da aba Explorar
+        const exploreNavBtns = document.querySelectorAll(".explore-nav-btn")
+        const exploreContents = document.querySelectorAll(".explore-content")
+        const residentsList = document.getElementById("residents-list")
+        const servicesList = document.getElementById("services-list")
+        const marketplaceList = document.getElementById("marketplace-list")
+        const addServiceBtnExplore = document.getElementById(
+          "add-service-btn-explore"
+        )
+        const addMarketplaceBtnExplore = document.getElementById(
+          "add-marketplace-btn-explore"
+        )
+
+        // Novos elementos de formulários
+        const addServiceScreen = document.getElementById("add-service-screen")
+        const addServiceForm = document.getElementById("add-service-form")
+        const cancelServiceBtn = document.getElementById("cancel-service-btn")
+        const addMarketplaceScreen = document.getElementById(
+          "add-marketplace-screen"
+        )
+        const addMarketplaceForm = document.getElementById(
+          "add-marketplace-form"
+        )
+        const cancelMarketplaceBtn = document.getElementById(
+          "cancel-marketplace-btn"
+        )
+
         let currentUserRole = "morador"
         let currentUser = {
           name: "Maria Silva",
@@ -1304,7 +1478,6 @@
           initials: "M",
         }
 
-        // Simula um banco de dados de posts
         const posts = {
           1: { likes: 25, isLiked: false },
           2: { likes: 12, isLiked: false },
@@ -1312,7 +1485,6 @@
           4: { likes: 8, isLiked: false },
         }
 
-        // Simula um banco de dados de comentários
         const comments = {
           1: [
             { user: "João", text: "Ficou ótimo! Parabéns pela iniciativa." },
@@ -1379,7 +1551,6 @@
           { id: 2, reason: "Descarte irregular de lixo", date: "20/10/2023" },
         ]
 
-        // Simulação de avisos oficiais
         let officialNotices = [
           {
             id: "notice-1",
@@ -1388,6 +1559,114 @@
             date: "28/11/2023",
           },
         ]
+
+        const residentsData = [
+          {
+            id: "res-1",
+            name: "Maria Silva",
+            apartment: "Apto 302",
+            initials: "M",
+          },
+          {
+            id: "res-2",
+            name: "João Silva",
+            apartment: "Apto 101",
+            initials: "J",
+          },
+          { id: "res-3", name: "Carlos", apartment: "Apto 502", initials: "C" },
+          {
+            id: "res-4",
+            name: "Ana Souza",
+            apartment: "Apto 405",
+            initials: "A",
+          },
+          { id: "res-5", name: "Vania", apartment: "Apto 205", initials: "V" },
+        ]
+
+        let servicesData = [
+          {
+            id: "serv-1",
+            title: "Serviço de Limpeza",
+            provider: "Equipe de Limpeza",
+            description:
+              "Limpeza de apartamentos e áreas comuns. Orçamento sem compromisso.",
+          },
+          {
+            id: "serv-2",
+            title: "Aulas de Violão",
+            provider: "Ricardo (Apto 701)",
+            description:
+              "Aulas particulares de violão para iniciantes e intermediários.",
+          },
+          {
+            id: "serv-3",
+            title: "Manutenção de Computadores",
+            provider: "Pedro (Apto 102)",
+            description: "Formatação, remoção de vírus e reparos em geral.",
+          },
+        ]
+
+        let marketplaceData = [
+          {
+            id: "mp-1",
+            title: "Bicicleta Usada",
+            description:
+              "Bicicleta de trilha semi-nova, ideal para passeios no parque.",
+            price: "R$ 450",
+            imageUrl:
+              "https://placehold.co/400x300/60a5fa/ffffff?text=Bicicleta",
+          },
+          {
+            id: "mp-2",
+            title: "Cadeira de Escritório",
+            description: "Cadeira ergonômica com pouco uso, excelente estado.",
+            price: "R$ 200",
+            imageUrl: "https://placehold.co/400x300/f87171/ffffff?text=Cadeira",
+          },
+          {
+            id: "mp-3",
+            title: "Livros de Estudo",
+            description:
+              "Diversos livros de programação e design, vendo ou troco.",
+            price: "R$ 80",
+            imageUrl: "https://placehold.co/400x300/34d399/ffffff?text=Livros",
+          },
+        ]
+
+        // Variável para armazenar o estado da sub-aba de "Explorar"
+        let activeExploreSubTab = "residents"
+
+        // Função centralizada para navegar entre as abas e gerenciar o estado
+        function goToTab(tabId, exploreSubTab = "residents") {
+          // Remove a classe 'active' de todas as abas e conteúdos
+          tabs.forEach((t) => t.classList.remove("active"))
+          contents.forEach((c) => c.classList.remove("active"))
+
+          // Adiciona a classe 'active' à aba e conteúdo desejados
+          document.getElementById(`${tabId}-tab`).classList.add("active")
+          document.getElementById(tabId).classList.add("active")
+
+          // Esconde as telas de formulário
+          addPostScreen.style.display = "none"
+          addWarningScreen.style.display = "none"
+          addNoticeScreen.style.display = "none"
+          addServiceScreen.style.display = "none"
+          addMarketplaceScreen.style.display = "none"
+          mainHeader.classList.remove("hidden")
+          mainContent.classList.remove("hidden")
+          mainNav.classList.remove("hidden")
+
+          // Lógica específica para cada aba
+          if (tabId === "profile") {
+            renderWarnings()
+          } else if (tabId === "home") {
+            showCorrectBtn()
+          } else if (tabId === "explore") {
+            // Atualiza o estado da sub-aba para 'explore'
+            activeExploreSubTab = exploreSubTab
+            renderExploreContent(activeExploreSubTab)
+          }
+        }
 
         // Evento para o formulário de login
         loginForm.addEventListener("submit", (e) => {
@@ -1430,24 +1709,28 @@
 
         // Mostra recursos específicos para o administrador
         function showAdminFeatures() {
+          addPostBtn.classList.remove("hidden")
           addPostBtn.classList.remove("bg-indigo-600")
           addPostBtn.classList.add("bg-amber-500")
           addWarningOption.classList.remove("hidden")
           addNoticeOption.classList.remove("hidden")
-          addPostOption.classList.add("hidden") // Esconde a opção de "Nova Publicação" para o admin
+          addPostOption.classList.add("hidden")
           addPostBtn.addEventListener("click", () => {
             floatingMenu.style.display =
               floatingMenu.style.display === "flex" ? "none" : "flex"
           })
           renderNotices()
+          addServiceBtnExplore.classList.add("hidden")
+          addMarketplaceBtnExplore.classList.add("hidden")
         }
 
         // Mostra recursos específicos para o morador
         function showUserFeatures() {
+          addPostBtn.classList.remove("hidden")
           addPostBtn.classList.remove("bg-amber-500")
           addPostBtn.classList.add("bg-indigo-600")
           addWarningOption.classList.add("hidden")
-          addNoticeOption.classList.add("hidden") // Esconde a opção de "Novo Aviso" para o morador
+          addNoticeOption.classList.add("hidden")
           addPostOption.classList.remove("hidden")
           addPostBtn.style.display = "flex"
           warningsSection.style.display = "block"
@@ -1457,6 +1740,8 @@
               floatingMenu.style.display === "flex" ? "none" : "flex"
           })
           renderNotices()
+          addServiceBtnExplore.classList.remove("hidden")
+          addMarketplaceBtnExplore.classList.remove("hidden")
         }
 
         // Renderiza a lista de advertências no perfil
@@ -1538,17 +1823,13 @@
                     </div>
                 `
 
-          // Adiciona o novo post logo abaixo do comunicado oficial
           feedContainer.insertBefore(
             newPostElement,
             feedContainer.querySelector(".post")
           )
-
-          // Reatribui os event listeners aos novos botões
           setupDynamicEventListeners()
         }
 
-        // Exibe ou oculta o botão flutuante de adicionar
         function showCorrectBtn() {
           if (document.getElementById("home").classList.contains("active")) {
             addPostBtn.style.display = "flex"
@@ -1558,7 +1839,6 @@
           }
         }
 
-        // Exibe as mensagens de um chat específico
         function renderMessages(chatId) {
           chatBody.innerHTML = ""
           const messages = chatHistory[chatId]
@@ -1571,7 +1851,6 @@
           chatBody.scrollTop = chatBody.scrollHeight
         }
 
-        // Envia uma nova mensagem no chat
         function sendMessage() {
           const text = messageInput.value.trim()
           if (text) {
@@ -1584,7 +1863,6 @@
           }
         }
 
-        // Função para exibir os comentários de um post
         function renderComments(postId) {
           const commentsList = document.querySelector(
             `.comments-section[data-post-id="${postId}"] .comments-list`
@@ -1603,7 +1881,6 @@
           }
         }
 
-        // Adiciona um novo comentário a um post
         function addComment(postId, commentText) {
           if (commentText.trim() === "") return
 
@@ -1613,7 +1890,6 @@
           }
           comments[postId].push(newComment)
 
-          // Atualiza a contagem de comentários na UI
           const postElement = document.querySelector(
             `.post[data-post-id="${postId}"]`
           )
@@ -1623,14 +1899,11 @@
           renderComments(postId)
         }
 
-        // Renderiza os avisos oficiais
         function renderNotices() {
-          // Remove todos os avisos existentes da interface
           document
             .querySelectorAll(".official-notice")
             .forEach((el) => el.remove())
 
-          // Adiciona os avisos dinamicamente
           officialNotices.forEach((notice) => {
             const noticeElement = document.createElement("div")
             noticeElement.id = notice.id
@@ -1659,13 +1932,125 @@
             feedContainer.prepend(noticeElement)
           })
 
-          // Reatribui os event listeners aos botões de apagar
+          setupDynamicEventListeners()
+        }
+
+        function renderExploreContent(tab) {
+          exploreContents.forEach((content) =>
+            content.classList.remove("active")
+          )
+          exploreNavBtns.forEach((btn) =>
+            btn.classList.remove("bg-indigo-600", "text-white")
+          )
+          exploreNavBtns.forEach((btn) =>
+            btn.classList.add("bg-gray-700", "text-gray-300")
+          )
+
+          let targetContent
+          if (tab === "residents") {
+            targetContent = document.getElementById("residents-content")
+            renderResidents()
+          } else if (tab === "services") {
+            targetContent = document.getElementById("services-content")
+            renderServices()
+          } else {
+            targetContent = document.getElementById("marketplace-content")
+            renderMarketplace()
+          }
+
+          targetContent.classList.add("active")
+          document
+            .getElementById(`${tab}-tab-explore`)
+            .classList.add("bg-indigo-600", "text-white")
+          document
+            .getElementById(`${tab}-tab-explore`)
+            .classList.remove("bg-gray-700", "text-gray-300")
+        }
+
+        function renderResidents() {
+          residentsList.innerHTML = ""
+          residentsData.forEach((resident) => {
+            const residentElement = document.createElement("div")
+            residentElement.className =
+              "bg-gray-800 rounded-lg shadow-sm p-4 flex items-center space-x-4"
+            residentElement.innerHTML = `
+                        <img src="https://placehold.co/50x50/3b82f6/ffffff?text=${resident.initials}" alt="Foto de Perfil" class="rounded-full border-2 border-blue-400">
+                        <div>
+                            <p class="font-bold text-gray-200">${resident.name}</p>
+                            <p class="text-sm text-gray-400">${resident.apartment}</p>
+                        </div>
+                    `
+            residentsList.appendChild(residentElement)
+          })
+        }
+
+        function renderServices() {
+          servicesList.innerHTML = ""
+          servicesData.forEach((service) => {
+            const serviceElement = document.createElement("div")
+            serviceElement.id = `service-${service.id}`
+            serviceElement.className =
+              "service-item bg-gray-800 rounded-lg shadow-sm p-4 flex justify-between items-start"
+
+            const deleteBtnHtml =
+              currentUserRole === "admin"
+                ? `
+                        <button class="delete-item-btn text-gray-400 hover:text-red-500 ml-4" data-item-id="${service.id}" data-item-type="service">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.234 21H7.766a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
+                    `
+                : ""
+
+            serviceElement.innerHTML = `
+                        <div>
+                            <p class="font-bold text-gray-200">${service.title}</p>
+                            <p class="text-sm text-gray-400 mt-1">Fornecedor: ${service.provider}</p>
+                            <p class="text-sm text-gray-300 mt-2">${service.description}</p>
+                        </div>
+                        ${deleteBtnHtml}
+                    `
+            servicesList.appendChild(serviceElement)
+          })
+          setupDynamicEventListeners()
+        }
+
+        function renderMarketplace() {
+          marketplaceList.innerHTML = ""
+          marketplaceData.forEach((item) => {
+            const itemElement = document.createElement("div")
+            itemElement.id = `marketplace-${item.id}`
+            itemElement.className =
+              "marketplace-item bg-gray-800 rounded-lg shadow-sm overflow-hidden flex flex-col relative"
+
+            const deleteBtnHtml =
+              currentUserRole === "admin"
+                ? `
+                        <button class="delete-item-btn text-gray-400 hover:text-red-500 absolute top-2 right-2 bg-gray-900 bg-opacity-50 rounded-full p-1" data-item-id="${item.id}" data-item-type="marketplace">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.234 21H7.766a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
+                    `
+                : ""
+
+            itemElement.innerHTML = `
+                        <img src="${item.imageUrl}" alt="${item.title}" class="w-full h-32 object-cover">
+                        <div class="p-3 flex-grow">
+                            <p class="font-bold text-gray-200">${item.title}</p>
+                            <p class="text-sm text-indigo-400 mt-1">${item.price}</p>
+                            <p class="text-xs text-gray-400 mt-2">${item.description}</p>
+                        </div>
+                        ${deleteBtnHtml}
+                    `
+            marketplaceList.appendChild(itemElement)
+          })
           setupDynamicEventListeners()
         }
 
         // Configura todos os event listeners dinâmicos (Curtir, Comentar, Deletar Aviso)
         function setupDynamicEventListeners() {
-          // Remove os listeners antigos para evitar duplicação
           document
             .querySelectorAll(".like-btn")
             .forEach((btn) => btn.removeEventListener("click", handleLike))
@@ -1689,8 +2074,12 @@
             .forEach((btn) =>
               btn.removeEventListener("click", handleDeleteNotice)
             )
+          document
+            .querySelectorAll(".delete-item-btn")
+            .forEach((btn) =>
+              btn.removeEventListener("click", handleDeleteItem)
+            )
 
-          // Adiciona novos listeners
           document
             .querySelectorAll(".like-btn")
             .forEach((btn) => btn.addEventListener("click", handleLike))
@@ -1708,9 +2097,11 @@
           document
             .querySelectorAll(".delete-notice-btn")
             .forEach((btn) => btn.addEventListener("click", handleDeleteNotice))
+          document
+            .querySelectorAll(".delete-item-btn")
+            .forEach((btn) => btn.addEventListener("click", handleDeleteItem))
         }
 
-        // Tratador de evento para curtidas
         function handleLike(event) {
           const btn = event.currentTarget
           const postId = btn.closest(".post").dataset.postId
@@ -1734,7 +2125,6 @@
           likesCountSpan.textContent = posts[postId].likes
         }
 
-        // Tratador de evento para clique no botão de comentário
         function handleCommentClick(event) {
           const btn = event.currentTarget
           const postId = btn.closest(".post").dataset.postId
@@ -1742,7 +2132,6 @@
             `.comments-section[data-post-id="${postId}"]`
           )
 
-          // Alterna a visibilidade da seção de comentários
           if (commentsSection.style.display === "block") {
             commentsSection.style.display = "none"
           } else {
@@ -1751,7 +2140,6 @@
           }
         }
 
-        // Tratador de evento para enviar comentário
         function handleSendComment(event) {
           const postElement = event.currentTarget.closest(".post")
           const postId = postElement.dataset.postId
@@ -1764,7 +2152,6 @@
           }
         }
 
-        // Tratador de evento para enviar comentário com a tecla Enter
         function handleSendCommentOnEnter(e) {
           if (e.key === "Enter") {
             e.preventDefault()
@@ -1772,43 +2159,63 @@
           }
         }
 
-        // Tratador de evento para deletar um aviso
         function handleDeleteNotice(event) {
           const noticeElement = event.currentTarget.closest(".official-notice")
           const noticeId = noticeElement.id
 
-          // Remove o aviso do array de avisos
           officialNotices = officialNotices.filter(
             (notice) => notice.id !== noticeId
           )
 
-          // Remove o aviso da interface
           noticeElement.remove()
         }
 
-        // Event listener para os botões da barra de navegação (abas)
+        function handleDeleteItem(event) {
+          const btn = event.currentTarget
+          const itemId = btn.dataset.itemId
+          const itemType = btn.dataset.itemType
+
+          if (itemType === "service") {
+            servicesData = servicesData.filter((item) => item.id !== itemId)
+            renderServices()
+          } else if (itemType === "marketplace") {
+            marketplaceData = marketplaceData.filter(
+              (item) => item.id !== itemId
+            )
+            renderMarketplace()
+          }
+        }
+
         tabs.forEach((tab) => {
           tab.addEventListener("click", () => {
-            tabs.forEach((t) => t.classList.remove("active"))
-            contents.forEach((c) => c.classList.remove("active"))
-            tab.classList.add("active")
             const targetId = tab.id.replace("-tab", "")
-            document.getElementById(targetId).classList.add("active")
-            showCorrectBtn()
-            chatWindow.classList.remove("active")
-            addPostScreen.style.display = "none"
-            addWarningScreen.style.display = "none"
-            addNoticeScreen.style.display = "none"
-            // Esconde a seção de advertências se não for a aba de perfil
-            if (targetId !== "profile") {
-              warningsSection.style.display = "none"
-            } else {
-              renderWarnings()
-            }
+            goToTab(targetId)
           })
         })
 
-        // Event listener para os itens da lista de chat
+        exploreNavBtns.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const tabName = btn.id.replace("-tab-explore", "")
+            goToTab("explore", tabName)
+          })
+        })
+
+        addServiceBtnExplore.addEventListener("click", () => {
+          floatingMenu.style.display = "none"
+          mainContent.classList.add("hidden")
+          mainNav.classList.add("hidden")
+          mainHeader.classList.add("hidden")
+          addServiceScreen.style.display = "flex"
+        })
+
+        addMarketplaceBtnExplore.addEventListener("click", () => {
+          floatingMenu.style.display = "none"
+          mainContent.classList.add("hidden")
+          mainNav.classList.add("hidden")
+          mainHeader.classList.add("hidden")
+          addMarketplaceScreen.style.display = "flex"
+        })
+
         chatItems.forEach((item) => {
           item.addEventListener("click", (event) => {
             const chatId = item.getAttribute("data-chat-id")
@@ -1820,13 +2227,11 @@
           })
         })
 
-        // Event listener para o botão de voltar do chat
         backBtn.addEventListener("click", () => {
           chatWindow.classList.remove("active")
           document.getElementById("messages").classList.add("active")
         })
 
-        // Event listener para o botão de enviar mensagem do chat
         sendBtn.addEventListener("click", sendMessage)
         messageInput.addEventListener("keypress", (e) => {
           if (e.key === "Enter") {
@@ -1834,7 +2239,6 @@
           }
         })
 
-        // Eventos do menu flutuante
         addPostOption.addEventListener("click", () => {
           floatingMenu.style.display = "none"
           mainContent.classList.add("hidden")
@@ -1859,12 +2263,16 @@
           addWarningScreen.style.display = "flex"
         })
 
-        // Eventos da tela de criação de aviso
         cancelNoticeBtn.addEventListener("click", () => {
-          addNoticeScreen.style.display = "none"
-          mainHeader.classList.remove("hidden")
-          mainContent.classList.remove("hidden")
-          mainNav.classList.remove("hidden")
+          goToTab("home")
+        })
+
+        cancelServiceBtn.addEventListener("click", () => {
+          goToTab("explore", "services")
+        })
+
+        cancelMarketplaceBtn.addEventListener("click", () => {
+          goToTab("explore", "marketplace")
         })
 
         noticeForm.addEventListener("submit", (e) => {
@@ -1879,7 +2287,6 @@
             return
           }
 
-          // Cria um novo aviso
           const newNotice = {
             id: noticeId,
             title: noticeTitle,
@@ -1887,30 +2294,81 @@
             date: noticeDate,
           }
 
-          // Adiciona o novo aviso ao array
           officialNotices.unshift(newNotice)
-
-          // Re-renderiza a lista de avisos
           renderNotices()
 
           alert("Novo aviso publicado com sucesso!")
 
-          // Reseta o formulário
           noticeForm.reset()
-
-          // Volta para a tela principal
-          addNoticeScreen.style.display = "none"
-          mainHeader.classList.remove("hidden")
-          mainContent.classList.remove("hidden")
-          mainNav.classList.remove("hidden")
+          goToTab("home")
         })
 
-        // Eventos da tela de criação de advertência
+        addServiceForm.addEventListener("submit", (e) => {
+          e.preventDefault()
+          const serviceTitle = document.getElementById("service-title").value
+          const serviceDescription = document.getElementById(
+            "service-description"
+          ).value
+
+          if (serviceTitle.trim() === "" || serviceDescription.trim() === "") {
+            alert("Por favor, preencha todos os campos do serviço.")
+            return
+          }
+
+          const newService = {
+            id: `serv-${Date.now()}`,
+            title: serviceTitle,
+            provider: `${currentUser.name} (${currentUser.apartment})`,
+            description: serviceDescription,
+          }
+
+          servicesData.push(newService)
+
+          alert("Novo serviço adicionado com sucesso!")
+          addServiceForm.reset()
+          goToTab("explore", "services")
+        })
+
+        addMarketplaceForm.addEventListener("submit", (e) => {
+          e.preventDefault()
+          const marketplaceTitle =
+            document.getElementById("marketplace-title").value
+          const marketplaceDescription = document.getElementById(
+            "marketplace-description"
+          ).value
+          const marketplacePrice =
+            document.getElementById("marketplace-price").value
+          const marketplaceImageUrl = document.getElementById(
+            "marketplace-image-url"
+          ).value
+
+          if (
+            marketplaceTitle.trim() === "" ||
+            marketplaceDescription.trim() === "" ||
+            marketplacePrice.trim() === "" ||
+            marketplaceImageUrl.trim() === ""
+          ) {
+            alert("Por favor, preencha todos os campos do marketplace.")
+            return
+          }
+
+          const newItem = {
+            id: `mp-${Date.now()}`,
+            title: marketplaceTitle,
+            description: marketplaceDescription,
+            price: "R$ " + marketplacePrice,
+            imageUrl: marketplaceImageUrl,
+          }
+
+          marketplaceData.push(newItem)
+
+          alert("Novo item adicionado ao marketplace com sucesso!")
+          addMarketplaceForm.reset()
+          goToTab("explore", "marketplace")
+        })
+
         cancelWarningBtn.addEventListener("click", () => {
-          addWarningScreen.style.display = "none"
-          mainHeader.classList.remove("hidden")
-          mainContent.classList.remove("hidden")
-          mainNav.classList.remove("hidden")
+          goToTab("profile")
         })
 
         warningForm.addEventListener("submit", (e) => {
@@ -1927,7 +2385,6 @@
 
           alert(`Advertência criada para ${selectedTenant}: "${warningReason}"`)
 
-          // Adiciona a nova advertência ao array (simulação)
           userWarnings.push({
             id: userWarnings.length + 1,
             reason: warningReason,
@@ -1935,22 +2392,12 @@
             imageUrl: warningImageUrl || null,
           })
 
-          // Reseta o formulário
           warningForm.reset()
-
-          // Volta para a tela principal
-          addWarningScreen.style.display = "none"
-          mainHeader.classList.remove("hidden")
-          mainContent.classList.remove("hidden")
-          mainNav.classList.remove("hidden")
+          goToTab("profile")
         })
 
-        // Eventos da tela de nova publicação
         cancelPostBtn.addEventListener("click", () => {
-          addPostScreen.style.display = "none"
-          mainHeader.classList.remove("hidden")
-          mainContent.classList.remove("hidden")
-          mainNav.classList.remove("hidden")
+          goToTab("home")
         })
 
         postForm.addEventListener("submit", (e) => {
@@ -1965,17 +2412,10 @@
 
           createNewPost(postText, postImageUrl)
 
-          // Reseta o formulário
           postForm.reset()
-
-          // Volta para a tela principal
-          addPostScreen.style.display = "none"
-          mainHeader.classList.remove("hidden")
-          mainContent.classList.remove("hidden")
-          mainNav.classList.remove("hidden")
+          goToTab("home")
         })
 
-        // Define a contagem inicial de comentários para os posts pré-existentes
         document.querySelectorAll(".post").forEach((post) => {
           const postId = post.dataset.postId
           if (comments[postId]) {
@@ -1984,10 +2424,8 @@
           }
         })
 
-        // Inicializa os event listeners dinâmicos
         setupDynamicEventListeners()
 
-        // Mostra o botão flutuante na página inicial
         showCorrectBtn()
       })
     </script>
