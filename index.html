@@ -3,19 +3,59 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VizinApp</title>
-    <!-- Inclui o Tailwind CSS para estilização rápida -->
+    <title>CondoApp</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body class="flex flex-col h-screen">
-    <!-- Header (Topo da Página) -->
+    <div id="login-screen" class="p-6">
+      <div class="bg-gray-800 p-8 rounded-lg shadow-xl w-80 max-w-full">
+        <h2 class="text-2xl font-bold text-center mb-6 text-gray-200">
+          CondoApp
+        </h2>
+        <form id="login-form" class="space-y-4">
+          <div>
+            <input
+              type="text"
+              id="username"
+              placeholder="Usuário"
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div>
+            <input
+              type="password"
+              id="password"
+              placeholder="Senha"
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <button
+            type="submit"
+            class="w-full bg-indigo-600 text-white font-bold py-2 rounded-lg hover:bg-indigo-500 transition-colors duration-300"
+          >
+            Entrar
+          </button>
+        </form>
+        <p
+          id="login-error"
+          class="text-red-400 text-sm text-center mt-4 hidden"
+        >
+          Usuário ou senha incorretos.
+        </p>
+        <p class="text-xs text-center text-gray-400 mt-4">
+          Usuário Teste: **morador** / **123**<br />
+          Usuário Admin: **admin** / **admin**
+        </p>
+      </div>
+    </div>
+
     <header
-      class="bg-gray-800 shadow-lg p-4 flex justify-between items-center sticky top-0 z-10"
+      class="bg-gray-800 shadow-lg p-4 flex justify-between items-center sticky top-0 z-10 hidden"
+      id="main-header"
     >
-      <h1 class="text-xl font-bold text-gray-200">VizinApp</h1>
+      <h1 class="text-xl font-bold text-gray-200">CondoApp</h1>
       <div class="flex items-center space-x-4">
-        <!-- Botão de Notificações -->
         <button class="text-gray-400 hover:text-gray-200">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -35,510 +75,603 @@
       </div>
     </header>
 
-    <!-- Conteúdo Principal das Abas -->
-    <main class="flex-grow overflow-y-auto pb-20">
-      <!-- Aba 1: Home (Feed) -->
+    <main class="flex-grow overflow-y-auto pb-20 hidden" id="main-content">
       <div id="home" class="tab-content p-4 active">
         <h2 class="text-2xl font-semibold mb-4 text-gray-100">
           Feed do Condomínio
         </h2>
-
-        <!-- Bloco de Comunicado Oficial -->
-        <div
-          class="bg-gray-800 rounded-lg shadow-sm p-4 mb-4 border-l-4 border-indigo-500"
-        >
-          <div class="flex justify-between items-center mb-2">
-            <span
-              class="bg-indigo-500 text-white text-xs font-bold px-2 py-1 rounded-full"
-              >Comunicado Oficial</span
-            >
-            <span class="text-xs text-gray-400">Hoje, 17:20</span>
-          </div>
-          <h3 class="text-lg font-bold text-gray-200 mb-1">
-            Manutenção programada nos elevadores
-          </h3>
-          <p class="text-sm text-gray-300">
-            Quarta-feira (28) das 10h às 12h. Pedimos que programem suas saídas.
-          </p>
-        </div>
-
-        <!-- Modelo de Publicação de Morador com imagem -->
-        <div
-          class="post bg-gray-800 rounded-lg shadow-sm p-4 mb-4"
-          data-post-id="1"
-        >
-          <div class="flex items-center mb-2">
+        <div id="feed-container">
+          <div
+            class="post bg-gray-800 rounded-lg shadow-sm p-4 mb-4"
+            data-post-id="1"
+            data-owner-id="res-3"
+          >
+            <div class="post-header flex items-start mb-2">
+              <img
+                src="https://placehold.co/40x40/60a5fa/ffffff?text=C"
+                alt="Foto de Perfil do Usuário"
+                class="rounded-full mr-3 border-2 border-blue-400 flex-shrink-0"
+              />
+              <div class="flex-grow">
+                <p class="font-bold text-gray-200">
+                  Carlos
+                  <span class="text-sm text-gray-400 font-normal"
+                    >・ 3h atrás</span
+                  >
+                </p>
+                <p class="text-xs text-gray-400">Apto 502</p>
+              </div>
+            </div>
+            <p class="text-gray-300 mb-3">
+              Academia renovada! Os novos equipamentos já estão disponíveis para
+              uso.
+            </p>
             <img
-              src="https://placehold.co/40x40/93c5fd/ffffff?text=C"
-              alt="Foto de Perfil do Usuário"
-              class="rounded-full mr-3 border-2 border-blue-400"
+              src="https://placehold.co/600x400/38bdf8/ffffff?text=Academia+Nova"
+              alt="Imagem da Publicação"
+              class="w-full rounded-md mb-3"
             />
-            <div>
-              <p class="font-bold text-gray-200">
-                Carlos
-                <span class="text-sm text-gray-400 font-normal"
-                  >・ 3h atrás</span
+            <div class="flex items-center space-x-4 text-gray-400">
+              <button
+                class="like-btn flex items-center space-x-1 hover:text-indigo-400"
+                data-liked="false"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-              </p>
-              <p class="text-xs text-gray-400">Apto 502</p>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+                <span class="likes-count">25</span>
+              </button>
+              <button
+                class="comment-btn flex items-center space-x-1 hover:text-indigo-400"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <span class="comment-count">2</span>
+              </button>
+            </div>
+            <div class="comments-section" data-post-id="1">
+              <div class="comments-list mt-2 space-y-2 text-sm text-gray-400">
+                <div class="p-2 rounded-md bg-gray-700">
+                  <p class="font-semibold text-gray-300">João</p>
+                  <p>Ficou ótimo! Parabéns pela iniciativa.</p>
+                </div>
+                <div class="p-2 rounded-md bg-gray-700">
+                  <p class="font-semibold text-gray-300">Ana</p>
+                  <p>Já testei e aprovei! Muito bom.</p>
+                </div>
+              </div>
+              <div class="add-comment-form mt-2 flex items-center space-x-2">
+                <input
+                  type="text"
+                  class="comment-input w-full px-4 py-2 rounded-full bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  placeholder="Escreva um comentário..."
+                />
+                <button
+                  class="send-comment-btn bg-indigo-600 text-white rounded-full p-2 hover:bg-indigo-500 transition-colors duration-300"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 transform rotate-90"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
-          <p class="text-gray-300 mb-3">
-            Academia renovada! Os novos equipamentos já estão disponíveis para
-            uso.
-          </p>
-          <img
-            src="https://placehold.co/600x400/38bdf8/ffffff?text=Academia+Nova"
-            alt="Imagem da Publicação"
-            class="w-full rounded-md mb-3"
-          />
-          <div class="flex items-center space-x-4 text-gray-400">
-            <button
-              class="like-btn flex items-center space-x-1 hover:text-indigo-400"
-              data-liked="false"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+          <div
+            class="post bg-gray-800 rounded-lg shadow-sm p-4 mb-4"
+            data-post-id="2"
+            data-owner-id="res-2"
+          >
+            <div class="post-header flex items-start mb-2">
+              <img
+                src="https://placehold.co/40x40/a78bfa/ffffff?text=J"
+                alt="Foto de Perfil do Usuário"
+                class="rounded-full mr-3 border-2 border-purple-400 flex-shrink-0"
+              />
+              <div class="flex-grow">
+                <p class="font-bold text-gray-200">
+                  João Silva
+                  <span class="text-sm text-gray-400 font-normal"
+                    >・ 1 dia atrás</span
+                  >
+                </p>
+                <p class="text-xs text-gray-400">Apto 101</p>
+              </div>
+            </div>
+            <p class="text-gray-300 mb-3">
+              Quem pode me emprestar uma furadeira para amanhã à tarde? Devolvo
+              logo em seguida! 🛠️
+            </p>
+            <div class="flex items-center space-x-4 text-gray-400">
+              <button
+                class="like-btn flex items-center space-x-1 hover:text-indigo-400"
+                data-liked="false"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                />
-              </svg>
-              <span class="likes-count">25</span>
-            </button>
-            <button class="flex items-center space-x-1 hover:text-indigo-400">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              <span>5</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Modelo de Publicação de Morador sem imagem -->
-        <div
-          class="post bg-gray-800 rounded-lg shadow-sm p-4 mb-4"
-          data-post-id="2"
-        >
-          <div class="flex items-center mb-2">
-            <img
-              src="https://placehold.co/40x40/8b5cf6/ffffff?text=J"
-              alt="Foto de Perfil do Usuário"
-              class="rounded-full mr-3 border-2 border-purple-400"
-            />
-            <div>
-              <p class="font-bold text-gray-200">
-                João Silva
-                <span class="text-sm text-gray-400 font-normal"
-                  >・ 1 dia atrás</span
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-              </p>
-              <p class="text-xs text-gray-400">Apto 101</p>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+                <span class="likes-count">12</span>
+              </button>
+              <button
+                class="comment-btn flex items-center space-x-1 hover:text-indigo-400"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <span class="comment-count">1</span>
+              </button>
+            </div>
+            <div class="comments-section" data-post-id="2">
+              <div class="comments-list mt-2 space-y-2 text-sm text-gray-400">
+                <div class="p-2 rounded-md bg-gray-700">
+                  <p class="font-semibold text-gray-300">Maria</p>
+                  <p>Posso te emprestar a minha! Me chama no chat.</p>
+                </div>
+              </div>
+              <div class="add-comment-form mt-2 flex items-center space-x-2">
+                <input
+                  type="text"
+                  class="comment-input w-full px-4 py-2 rounded-full bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  placeholder="Escreva um comentário..."
+                />
+                <button
+                  class="send-comment-btn bg-indigo-600 text-white rounded-full p-2 hover:bg-indigo-500 transition-colors duration-300"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 transform rotate-90"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
-          <p class="text-gray-300 mb-3">
-            Quem pode me emprestar uma furadeira para amanhã à tarde? Devolvo
-            logo em seguida! 🛠️
-          </p>
-          <div class="flex items-center space-x-4 text-gray-400">
-            <button
-              class="like-btn flex items-center space-x-1 hover:text-indigo-400"
-              data-liked="false"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                />
-              </svg>
-              <span class="likes-count">12</span>
-            </button>
-            <button class="flex items-center space-x-1 hover:text-indigo-400">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              <span>3</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Mais um post de morador com imagem -->
-        <div
-          class="post bg-gray-800 rounded-lg shadow-sm p-4 mb-4"
-          data-post-id="3"
-        >
-          <div class="flex items-center mb-2">
+          <div
+            class="post bg-gray-800 rounded-lg shadow-sm p-4 mb-4"
+            data-post-id="3"
+            data-owner-id="res-6"
+          >
+            <div class="post-header flex items-start mb-2">
+              <img
+                src="https://placehold.co/40x40/9ca3af/ffffff?text=L"
+                alt="Foto de Perfil do Usuário"
+                class="rounded-full mr-3 border-2 border-gray-400 flex-shrink-0"
+              />
+              <div class="flex-grow">
+                <p class="font-bold text-gray-200">
+                  Larissa
+                  <span class="text-sm text-gray-400 font-normal"
+                    >・ 2 dias atrás</span
+                  >
+                </p>
+                <p class="text-xs text-gray-400">Apto 603</p>
+              </div>
+            </div>
+            <p class="text-gray-300 mb-3">
+              Adorei o novo jardim do prédio! Quem plantou as flores? Ficou
+              lindo! 🌷
+            </p>
             <img
-              src="https://placehold.co/40x40/d1d5db/ffffff?text=L"
-              alt="Foto de Perfil do Usuário"
-              class="rounded-full mr-3 border-2 border-gray-400"
+              src="https://placehold.co/600x400/9ca3af/ffffff?text=Jardim+do+Condom%C3%ADnio"
+              alt="Imagem da Publicação"
+              class="w-full rounded-md mb-3"
             />
-            <div>
-              <p class="font-bold text-gray-200">
-                Larissa
-                <span class="text-sm text-gray-400 font-normal"
-                  >・ 2 dias atrás</span
+            <div class="flex items-center space-x-4 text-gray-400">
+              <button
+                class="like-btn flex items-center space-x-1 hover:text-indigo-400"
+                data-liked="false"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-              </p>
-              <p class="text-xs text-gray-400">Apto 603</p>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+                <span class="likes-count">30</span>
+              </button>
+              <button
+                class="comment-btn flex items-center space-x-1 hover:text-indigo-400"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <span class="comment-count">1</span>
+              </button>
+            </div>
+            <div class="comments-section" data-post-id="3">
+              <div class="comments-list mt-2 space-y-2 text-sm text-gray-400">
+                <div class="p-2 rounded-md bg-gray-700">
+                  <p class="font-semibold text-gray-300">Paula</p>
+                  <p>
+                    O jardineiro é incrível! Ele se dedica muito ao condomínio.
+                  </p>
+                </div>
+              </div>
+              <div class="add-comment-form mt-2 flex items-center space-x-2">
+                <input
+                  type="text"
+                  class="comment-input w-full px-4 py-2 rounded-full bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  placeholder="Escreva um comentário..."
+                />
+                <button
+                  class="send-comment-btn bg-indigo-600 text-white rounded-full p-2 hover:bg-indigo-500 transition-colors duration-300"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 transform rotate-90"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
-          <p class="text-gray-300 mb-3">
-            Adorei o novo jardim do prédio! Quem plantou as flores? Ficou lindo!
-            🌷
-          </p>
-          <img
-            src="https://placehold.co/600x400/9ca3af/ffffff?text=Jardim+do+Condom%C3%ADnio"
-            alt="Imagem da Publicação"
-            class="w-full rounded-md mb-3"
-          />
-          <div class="flex items-center space-x-4 text-gray-400">
-            <button
-              class="like-btn flex items-center space-x-1 hover:text-indigo-400"
-              data-liked="false"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                />
-              </svg>
-              <span class="likes-count">30</span>
-            </button>
-            <button class="flex items-center space-x-1 hover:text-indigo-400">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              <span>8</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Post de serviço -->
-        <div
-          class="post bg-gray-800 rounded-lg shadow-sm p-4 mb-4"
-          data-post-id="4"
-        >
-          <div class="flex items-center mb-2">
-            <img
-              src="https://placehold.co/40x40/d6d3d1/ffffff?text=E"
-              alt="Foto de Perfil do Usuário"
-              class="rounded-full mr-3 border-2 border-stone-400"
-            />
-            <div>
-              <p class="font-bold text-gray-200">
-                Equipe de Limpeza
-                <span class="text-sm text-gray-400 font-normal"
-                  >・ 3 dias atrás</span
-                >
-              </p>
-              <p class="text-xs text-gray-400">Serviço</p>
+          <div
+            class="post bg-gray-800 rounded-lg shadow-sm p-4 mb-4"
+            data-post-id="4"
+            data-owner-id="admin-user"
+          >
+            <div class="post-header flex items-start mb-2">
+              <img
+                src="https://placehold.co/40x40/64748b/ffffff?text=E"
+                alt="Foto de Perfil do Usuário"
+                class="rounded-full mr-3 border-2 border-slate-500 flex-shrink-0"
+              />
+              <div class="flex-grow">
+                <p class="font-bold text-gray-200">
+                  Equipe de Limpeza
+                  <span class="text-sm text-gray-400 font-normal"
+                    >・ 3 dias atrás</span
+                  >
+                </p>
+                <p class="text-xs text-gray-400">Serviço</p>
+              </div>
             </div>
-          </div>
-          <p class="text-gray-300 mb-3">
-            Oferecemos serviço de limpeza de apartamentos. Interessados podem
-            entrar em contato por mensagem privada.
-          </p>
-          <div class="flex items-center space-x-4 text-gray-400">
-            <button
-              class="like-btn flex items-center space-x-1 hover:text-indigo-400"
-              data-liked="false"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+            <p class="text-gray-300 mb-3">
+              Oferecemos serviço de limpeza de apartamentos. Interessados podem
+              entrar em contato por mensagem privada.
+            </p>
+            <div class="flex items-center space-x-4 text-gray-400">
+              <button
+                class="like-btn flex items-center space-x-1 hover:text-indigo-400"
+                data-liked="false"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                />
-              </svg>
-              <span class="likes-count">8</span>
-            </button>
-            <button class="flex items-center space-x-1 hover:text-indigo-400">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+                <span class="likes-count">8</span>
+              </button>
+              <button
+                class="comment-btn flex items-center space-x-1 hover:text-indigo-400"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <span class="comment-count">1</span>
+              </button>
+            </div>
+            <div class="comments-section" data-post-id="4">
+              <div class="comments-list mt-2 space-y-2 text-sm text-gray-400">
+                <div class="p-2 rounded-md bg-gray-700">
+                  <p class="font-semibold text-gray-300">Síndico</p>
+                  <p>Excelente iniciativa para a comunidade!</p>
+                </div>
+              </div>
+              <div class="add-comment-form mt-2 flex items-center space-x-2">
+                <input
+                  type="text"
+                  class="comment-input w-full px-4 py-2 rounded-full bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  placeholder="Escreva um comentário..."
                 />
-              </svg>
-              <span>1</span>
-            </button>
+                <button
+                  class="send-comment-btn bg-indigo-600 text-white rounded-full p-2 hover:bg-indigo-500 transition-colors duration-300"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 transform rotate-90"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Aba 2: Explorar (Busca/Marketplace) -->
       <div id="explore" class="tab-content p-4">
         <h2 class="text-2xl font-semibold mb-4 text-gray-100">
           Explorar e Serviços
         </h2>
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          <div class="bg-gray-800 rounded-lg shadow-sm p-4 text-center">
-            <p class="text-indigo-400 text-3xl mb-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-8 w-8 mx-auto"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </p>
-            <p class="font-bold text-gray-300">Moradores</p>
+        <div class="flex space-x-2 mb-4 overflow-x-auto">
+          <button
+            id="residents-tab-explore"
+            class="explore-nav-btn bg-indigo-600 text-white px-4 py-2 rounded-full whitespace-nowrap"
+          >
+            Moradores
+          </button>
+          <button
+            id="services-tab-explore"
+            class="explore-nav-btn bg-gray-700 text-gray-300 px-4 py-2 rounded-full whitespace-nowrap"
+          >
+            Serviços
+          </button>
+          <button
+            id="marketplace-tab-explore"
+            class="explore-nav-btn bg-gray-700 text-gray-300 px-4 py-2 rounded-full whitespace-nowrap"
+          >
+            Marketplace
+          </button>
+        </div>
+        <div id="residents-content" class="explore-content active">
+          <h3 class="text-xl font-semibold mb-3">Moradores do Condomínio</h3>
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+            id="residents-list"
+          ></div>
+        </div>
+        <div id="services-content" class="explore-content">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="text-xl font-semibold">Serviços Oferecidos</h3>
+            <button
+              id="add-service-btn-explore"
+              class="add-explore-item-btn bg-indigo-600 text-white px-3 py-1 rounded-full text-sm hidden"
+            >
+              + Adicionar
+            </button>
           </div>
-          <div class="bg-gray-800 rounded-lg shadow-sm p-4 text-center">
-            <p class="text-indigo-400 text-3xl mb-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-8 w-8 mx-auto"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 6.5V17.5M12 6.5a4 4 0 00-4 4v7h8v-7a4 4 0 00-4-4z"
-                />
-              </svg>
-            </p>
-            <p class="font-bold text-gray-300">Serviços</p>
+          <div class="space-y-4" id="services-list"></div>
+        </div>
+        <div id="marketplace-content" class="explore-content">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="text-xl font-semibold">Marketplace</h3>
+            <button
+              id="add-marketplace-btn-explore"
+              class="add-explore-item-btn bg-indigo-600 text-white px-3 py-1 rounded-full text-sm hidden"
+            >
+              + Adicionar
+            </button>
           </div>
-          <div class="bg-gray-800 rounded-lg shadow-sm p-4 text-center">
-            <p class="text-indigo-400 text-3xl mb-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-8 w-8 mx-auto"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M3 6l3 1v16h12V7l3-1M6 6v-2a2 2 0 012-2h8a2 2 0 012 2v2M8 7V5h8v2M12 11v6m-3-3h6"
-                />
-              </svg>
-            </p>
-            <p class="font-bold text-gray-300">Marketplace</p>
-          </div>
+          <div
+            class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"
+            id="marketplace-list"
+          ></div>
         </div>
       </div>
 
-      <!-- Aba 3: Reservas/Agenda -->
       <div id="reservations" class="tab-content p-4">
         <h2 class="text-2xl font-semibold mb-4 text-gray-100">
           Reservas e Eventos
         </h2>
         <div class="bg-gray-800 rounded-lg shadow-sm p-4">
           <h3 class="font-bold text-lg mb-4 text-gray-200">Áreas Comuns</h3>
-          <ul id="reservations-list" class="space-y-4 text-gray-300">
-            <li class="p-2 rounded-md bg-gray-700">
-              <div class="flex items-center justify-between mb-2">
-                <span>Salão de Festas</span>
-                <button
-                  class="bg-indigo-600 text-white px-3 py-1 text-sm rounded-md hover:bg-indigo-500"
-                >
-                  Reservar
-                </button>
-              </div>
-              <div class="border-t border-gray-600 pt-2">
-                <p class="text-xs text-gray-400 font-semibold mb-1">
-                  Datas Reservadas:
-                </p>
-                <span class="text-sm text-red-400">10/11, 15/11, 22/11</span>
-              </div>
-            </li>
-            <li class="p-2 rounded-md bg-gray-700">
-              <div class="flex items-center justify-between mb-2">
-                <span>Churrasqueira</span>
-                <button
-                  class="bg-indigo-600 text-white px-3 py-1 text-sm rounded-md hover:bg-indigo-500"
-                >
-                  Reservar
-                </button>
-              </div>
-              <div class="border-t border-gray-600 pt-2">
-                <p class="text-xs text-gray-400 font-semibold mb-1">
-                  Datas Reservadas:
-                </p>
-                <span class="text-sm text-red-400">05/11, 12/11, 13/11</span>
-              </div>
-            </li>
-            <li class="p-2 rounded-md bg-gray-700">
-              <div class="flex items-center justify-between mb-2">
-                <span>Quadra Poliesportiva</span>
-                <button
-                  class="bg-indigo-600 text-white px-3 py-1 text-sm rounded-md hover:bg-indigo-500"
-                >
-                  Reservar
-                </button>
-              </div>
-              <div class="border-t border-gray-600 pt-2">
-                <p class="text-xs text-gray-400 font-semibold mb-1">
-                  Datas Reservadas:
-                </p>
-                <span class="text-sm text-red-400">18/11, 19/11, 25/11</span>
-              </div>
-            </li>
-          </ul>
+          <ul id="reservations-list" class="space-y-4 text-gray-300"></ul>
         </div>
       </div>
 
-      <!-- Aba 4: Mensagens (Lista de Chats) -->
       <div id="messages" class="tab-content p-4">
         <h2 class="text-2xl font-semibold mb-4 text-gray-100">Mensagens</h2>
-        <div class="space-y-2">
-          <!-- Chat de Exemplo: Administração -->
-          <div
-            class="chat-item flex items-center p-3 rounded-lg bg-gray-800 shadow-sm hover:bg-gray-700 cursor-pointer"
-            data-chat-id="admin"
-          >
-            <img
-              src="https://placehold.co/50x50/6366f1/ffffff?text=A"
-              alt="Foto de Perfil"
-              class="rounded-full mr-4 border-2 border-indigo-400"
-            />
-            <div>
-              <p class="font-bold text-gray-200">Administração</p>
-              <p class="text-sm text-gray-400 truncate">
-                Amanhã teremos manutenção no elevador...
-              </p>
-            </div>
-          </div>
-          <!-- Chat de Exemplo: Vania (Apto 205) -->
-          <div
-            class="chat-item flex items-center p-3 rounded-lg bg-gray-800 shadow-sm hover:bg-gray-700 cursor-pointer"
-            data-chat-id="vania"
-          >
-            <img
-              src="https://placehold.co/50x50/93c5fd/ffffff?text=V"
-              alt="Foto de Perfil"
-              class="rounded-full mr-4 border-2 border-blue-400"
-            />
-            <div>
-              <p class="font-bold text-gray-200">Vania (Apto 205)</p>
-              <p class="text-sm text-gray-400 truncate">
-                Obrigado por me ajudar a carregar as compras!
-              </p>
-            </div>
-          </div>
-          <!-- Chat de Exemplo: Grupo -->
-          <div
-            class="chat-item flex items-center p-3 rounded-lg bg-gray-800 shadow-sm hover:bg-gray-700 cursor-pointer"
-            data-chat-id="grupo_a"
-          >
-            <img
-              src="https://placehold.co/50x50/34d399/ffffff?text=G"
-              alt="Ícone de Grupo"
-              class="rounded-full mr-4 border-2 border-emerald-400"
-            />
-            <div>
-              <p class="font-bold text-gray-200">Grupo do Bloco A</p>
-              <p class="text-sm text-gray-400 truncate">
-                Alguém viu a chave do salão de festas?
-              </p>
-            </div>
-          </div>
-        </div>
+        <div id="chat-list-container" class="space-y-2"></div>
       </div>
 
-      <!-- Aba 5: Perfil -->
       <div id="profile" class="tab-content p-4">
         <h2 class="text-2xl font-semibold mb-4 text-gray-100">Perfil</h2>
         <div
-          class="bg-gray-800 rounded-lg shadow-sm p-6 mb-4 flex flex-col items-center"
+          class="bg-gray-800 rounded-lg shadow-sm p-6 mb-4 flex flex-col items-center relative"
         >
+          <button
+            id="back-to-explore-btn"
+            class="absolute top-4 left-4 text-gray-400 hover:text-white hidden"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </button>
+          <button
+            id="edit-profile-btn"
+            class="absolute top-4 right-4 text-gray-400 hover:text-white"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L13.196 5.232z"
+              />
+            </svg>
+          </button>
           <img
             src="https://placehold.co/100x100/6366f1/ffffff?text=U"
             alt="Foto de Perfil do Usuário"
             class="rounded-full mb-4 border-4 border-indigo-400"
           />
-          <h3 class="text-xl font-bold text-gray-200">Maria Silva</h3>
-          <p class="text-gray-400">Apto 302</p>
+          <h3 id="user-name" class="text-xl font-bold text-gray-200"></h3>
+          <p class="text-gray-400" id="user-apartment"></p>
+          <button
+            id="send-message-from-profile-btn"
+            class="hidden mt-4 w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-500 transition-colors duration-300 flex items-center justify-center space-x-2"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              />
+            </svg>
+            <span>Enviar Mensagem</span>
+          </button>
         </div>
-        <div class="bg-gray-800 rounded-lg shadow-sm p-4">
-          <h3 class="font-bold text-lg mb-2 text-gray-200">Informações</h3>
+        <div
+          id="profile-info-section"
+          class="bg-gray-800 rounded-lg shadow-sm p-4 mb-4"
+        >
+          <h3 class="font-bold text-lg mb-2 text-gray-200">
+            Informações Pessoais
+          </h3>
           <ul class="space-y-2 text-gray-300">
-            <li><span class="font-semibold">Veículo:</span> Honda Civic</li>
+            <li id="profile-phone"></li>
+            <li id="profile-email"></li>
+            <li id="profile-emergency"></li>
+          </ul>
+        </div>
+        <div
+          id="profile-vehicles-section"
+          class="bg-gray-800 rounded-lg shadow-sm p-4 mb-4"
+        >
+          <h3 class="font-bold text-lg mb-2 text-gray-200">Veículos</h3>
+          <ul id="vehicles-list" class="space-y-3 text-gray-300"></ul>
+        </div>
+        <div
+          id="profile-activity-section"
+          class="bg-gray-800 rounded-lg shadow-sm p-4 mb-4"
+        >
+          <h3 class="font-bold text-lg mb-2 text-gray-200">Atividade no App</h3>
+          <ul class="space-y-2 text-gray-300">
             <li>
               <span class="font-semibold">Histórico de Reservas:</span>
               Churrasqueira (15/08)
@@ -546,10 +679,434 @@
             <li><span class="font-semibold">Minhas Publicações:</span> 2</li>
           </ul>
         </div>
+        <div
+          id="warnings-section"
+          class="bg-gray-800 rounded-lg shadow-sm p-4 hidden"
+        >
+          <h3 class="font-bold text-lg mb-2 text-red-400">
+            Advertências Recebidas
+          </h3>
+          <ul id="warnings-list" class="space-y-2 text-gray-300"></ul>
+        </div>
       </div>
     </main>
 
-    <!-- Botão de Adicionar Publicação (Flutuante) -->
+    <div id="edit-profile-screen" class="fullscreen-form">
+      <div class="w-full max-w-lg mx-auto bg-gray-800 p-6 rounded-lg">
+        <h2 class="text-2xl font-bold mb-6 text-center text-gray-200">
+          Editar Perfil
+        </h2>
+        <form id="edit-profile-form" class="space-y-4">
+          <div>
+            <label
+              for="edit-phone"
+              class="block text-sm font-medium text-gray-400"
+              >Telefone</label
+            >
+            <input
+              type="text"
+              id="edit-phone"
+              class="mt-1 w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div>
+            <label
+              for="edit-email"
+              class="block text-sm font-medium text-gray-400"
+              >Email</label
+            >
+            <input
+              type="email"
+              id="edit-email"
+              class="mt-1 w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div class="border-t border-gray-700 pt-4">
+            <h3 class="text-lg font-semibold text-gray-300 mb-2">
+              Contato de Emergência
+            </h3>
+            <div>
+              <label
+                for="edit-emergency-name"
+                class="block text-sm font-medium text-gray-400"
+                >Nome</label
+              >
+              <input
+                type="text"
+                id="edit-emergency-name"
+                class="mt-1 w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+            <div class="mt-2">
+              <label
+                for="edit-emergency-phone"
+                class="block text-sm font-medium text-gray-400"
+                >Telefone</label
+              >
+              <input
+                type="text"
+                id="edit-emergency-phone"
+                class="mt-1 w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+          </div>
+          <div class="border-t border-gray-700 pt-4">
+            <h3 class="text-lg font-semibold text-gray-300 mb-2">Veículos</h3>
+            <div id="edit-vehicles-list" class="space-y-4"></div>
+          </div>
+          <div class="flex justify-end space-x-4 pt-6">
+            <button
+              type="button"
+              id="cancel-edit-profile-btn"
+              class="bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-500 transition-colors"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-500 transition-colors"
+            >
+              Salvar Alterações
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div id="add-notice-screen" class="fullscreen-form">
+      <div class="bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-sm">
+        <h2 class="text-2xl font-bold text-gray-200 mb-4 text-center">
+          Novo Aviso
+        </h2>
+        <form id="notice-form" class="space-y-4">
+          <div>
+            <label
+              for="notice-title"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >Título do Aviso</label
+            >
+            <input
+              type="text"
+              id="notice-title"
+              placeholder="Ex: Manutenção na piscina"
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div>
+            <label
+              for="notice-text"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >Texto do Aviso</label
+            >
+            <textarea
+              id="notice-text"
+              rows="4"
+              placeholder="Detalhes importantes para os moradores..."
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            ></textarea>
+          </div>
+          <div class="flex justify-between space-x-2">
+            <button
+              type="button"
+              id="cancel-notice-btn"
+              class="w-1/2 bg-gray-600 text-white font-bold py-2 rounded-lg hover:bg-gray-500 transition-colors duration-300"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="w-1/2 bg-indigo-600 text-white font-bold py-2 rounded-lg hover:bg-indigo-500 transition-colors duration-300"
+            >
+              Publicar Aviso
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div id="add-warning-screen" class="fullscreen-form">
+      <div class="bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-sm">
+        <h2 class="text-2xl font-bold text-gray-200 mb-4 text-center">
+          Nova Advertência
+        </h2>
+        <form id="warning-form" class="space-y-4">
+          <div>
+            <label
+              for="tenant-select"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >Morador</label
+            >
+            <select
+              id="tenant-select"
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+            >
+              <option value="morador">Maria Silva (Apto 302)</option>
+              <option value="joao">João Silva (Apto 101)</option>
+              <option value="carlos">Carlos (Apto 502)</option>
+            </select>
+          </div>
+          <div>
+            <label
+              for="warning-reason"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >Motivo da Advertência</label
+            >
+            <textarea
+              id="warning-reason"
+              rows="3"
+              placeholder="Ex: Barulho excessivo no salão de festas..."
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+            ></textarea>
+          </div>
+          <div>
+            <label
+              for="warning-image-upload"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >Anexar Evidência (Opcional)</label
+            >
+            <input
+              type="file"
+              id="warning-image-upload"
+              accept="image/*"
+              class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+            />
+          </div>
+          <div class="flex justify-between space-x-2">
+            <button
+              type="button"
+              id="cancel-warning-btn"
+              class="w-1/2 bg-gray-600 text-white font-bold py-2 rounded-lg hover:bg-gray-500 transition-colors duration-300"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="w-1/2 bg-red-600 text-white font-bold py-2 rounded-lg hover:bg-red-500 transition-colors duration-300"
+            >
+              Enviar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div id="add-post-screen" class="fullscreen-form">
+      <div class="bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-sm">
+        <h2 class="text-2xl font-bold text-gray-200 mb-4 text-center">
+          Nova Publicação
+        </h2>
+        <form id="post-form" class="space-y-4">
+          <div>
+            <label
+              for="post-text"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >Texto da Publicação</label
+            >
+            <textarea
+              id="post-text"
+              rows="4"
+              placeholder="O que você gostaria de compartilhar?"
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            ></textarea>
+          </div>
+          <div>
+            <label
+              for="post-image-upload"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >Adicionar Imagem (Opcional)</label
+            >
+            <input
+              type="file"
+              id="post-image-upload"
+              accept="image/*"
+              class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+            />
+          </div>
+          <div class="flex justify-between space-x-2">
+            <button
+              type="button"
+              id="cancel-post-btn"
+              class="w-1/2 bg-gray-600 text-white font-bold py-2 rounded-lg hover:bg-gray-500 transition-colors duration-300"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="w-1/2 bg-indigo-600 text-white font-bold py-2 rounded-lg hover:bg-indigo-500 transition-colors duration-300"
+            >
+              Publicar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div id="add-service-screen" class="fullscreen-form">
+      <div class="bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-sm">
+        <h2 class="text-2xl font-bold text-gray-200 mb-4 text-center">
+          Adicionar Serviço
+        </h2>
+        <form id="add-service-form" class="space-y-4">
+          <div>
+            <label
+              for="service-title"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >Título do Serviço</label
+            >
+            <input
+              type="text"
+              id="service-title"
+              placeholder="Ex: Aula de Violão"
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div>
+            <label
+              for="service-description"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >Descrição</label
+            >
+            <textarea
+              id="service-description"
+              rows="3"
+              placeholder="Detalhe o serviço que você oferece..."
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            ></textarea>
+          </div>
+          <div class="flex justify-between space-x-2">
+            <button
+              type="button"
+              id="cancel-service-btn"
+              class="w-1/2 bg-gray-600 text-white font-bold py-2 rounded-lg hover:bg-gray-500 transition-colors duration-300"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="w-1/2 bg-indigo-600 text-white font-bold py-2 rounded-lg hover:bg-indigo-500 transition-colors duration-300"
+            >
+              Adicionar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div id="add-marketplace-screen" class="fullscreen-form">
+      <div class="bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-sm">
+        <h2 class="text-2xl font-bold text-gray-200 mb-4 text-center">
+          Adicionar ao Marketplace
+        </h2>
+        <form id="add-marketplace-form" class="space-y-4">
+          <div>
+            <label
+              for="marketplace-title"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >Título do Anúncio</label
+            >
+            <input
+              type="text"
+              id="marketplace-title"
+              placeholder="Ex: Bicicleta Usada"
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div>
+            <label
+              for="marketplace-description"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >Descrição</label
+            >
+            <textarea
+              id="marketplace-description"
+              rows="3"
+              placeholder="Detalhe o produto que está vendendo..."
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            ></textarea>
+          </div>
+          <div>
+            <label
+              for="marketplace-price"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >Preço</label
+            >
+            <input
+              type="text"
+              id="marketplace-price"
+              placeholder="Ex: 450,00"
+              class="w-full px-4 py-2 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div>
+            <label
+              for="marketplace-image-upload"
+              class="block text-gray-400 text-sm font-semibold mb-1"
+              >Imagem do Produto</label
+            >
+            <input
+              type="file"
+              id="marketplace-image-upload"
+              accept="image/*"
+              class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+            />
+          </div>
+          <div class="flex justify-between space-x-2">
+            <button
+              type="button"
+              id="cancel-marketplace-btn"
+              class="w-1/2 bg-gray-600 text-white font-bold py-2 rounded-lg hover:bg-gray-500 transition-colors duration-300"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="w-1/2 bg-indigo-600 text-white font-bold py-2 rounded-lg hover:bg-indigo-500 transition-colors duration-300"
+            >
+              Adicionar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div id="reservation-modal">
+      <div class="w-full max-w-sm mx-auto bg-gray-800 p-4 rounded-lg shadow-xl">
+        <div class="flex justify-between items-center mb-4">
+          <h2
+            id="reservation-area-name"
+            class="text-xl font-bold text-gray-200"
+          ></h2>
+          <button
+            id="close-reservation-modal"
+            class="text-2xl font-bold text-gray-400 hover:text-white"
+          >
+            &times;
+          </button>
+        </div>
+        <div class="flex justify-between items-center mb-4">
+          <button
+            id="prev-month-btn"
+            class="bg-gray-700 p-2 rounded-full hover:bg-indigo-600"
+          >
+            &lt;
+          </button>
+          <h3 id="month-year" class="font-semibold text-lg"></h3>
+          <button
+            id="next-month-btn"
+            class="bg-gray-700 p-2 rounded-full hover:bg-indigo-600"
+          >
+            &gt;
+          </button>
+        </div>
+        <div
+          class="calendar-grid text-sm font-semibold text-center text-gray-400 mb-2"
+        >
+          <div>Dom</div>
+          <div>Seg</div>
+          <div>Ter</div>
+          <div>Qua</div>
+          <div>Qui</div>
+          <div>Sex</div>
+          <div>Sáb</div>
+        </div>
+        <div id="calendar-days" class="calendar-grid text-center"></div>
+      </div>
+    </div>
+
     <button
       id="add-post-btn"
       class="bg-indigo-600 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-indigo-500 transition-colors duration-300"
@@ -569,10 +1126,30 @@
         />
       </svg>
     </button>
+    <div id="floating-menu">
+      <button
+        id="add-post-option"
+        class="w-full text-left py-2 px-4 rounded-md hover:bg-gray-600 hidden"
+      >
+        Nova Publicação
+      </button>
+      <button
+        id="add-notice-option"
+        class="w-full text-left py-2 px-4 rounded-md hover:bg-gray-600 hidden"
+      >
+        Novo Aviso
+      </button>
+      <button
+        id="add-warning-option"
+        class="w-full text-left py-2 px-4 rounded-md hover:bg-gray-600 hidden"
+      >
+        Nova Advertência
+      </button>
+    </div>
 
-    <!-- Barra de Navegação Inferior (Abas) -->
     <nav
-      class="bg-gray-800 shadow-lg p-4 flex justify-around items-center sticky bottom-0 z-10"
+      class="bg-gray-800 shadow-lg p-4 flex justify-around items-center sticky bottom-0 z-10 hidden"
+      id="main-nav"
     >
       <button
         id="home-tab"
@@ -673,9 +1250,7 @@
       </button>
     </nav>
 
-    <!-- Janela de Chat (Inicialmente oculta) -->
-    <div id="chat-window">
-      <!-- Chat Header -->
+    <div id="chat-window" class="hidden">
       <div
         class="bg-gray-800 shadow-lg p-4 flex items-center sticky top-0 z-10"
       >
@@ -700,13 +1275,7 @@
         </button>
         <h2 id="chat-name" class="text-xl font-bold text-gray-200"></h2>
       </div>
-
-      <!-- Chat Body (Área de Mensagens) -->
-      <div id="chat-body" class="flex-grow overflow-y-auto p-4 space-y-4">
-        <!-- As mensagens serão inseridas aqui via JavaScript -->
-      </div>
-
-      <!-- Chat Input -->
+      <div id="chat-body" class="flex-grow overflow-y-auto p-4 space-y-4"></div>
       <div
         class="bg-gray-800 shadow-lg p-4 flex items-center space-x-2 sticky bottom-0"
       >
